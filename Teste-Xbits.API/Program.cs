@@ -5,6 +5,7 @@ using Teste_Xbits.API.Settings.Handlers;
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 
+builder.Services.AddSettingsControl(configuration);
 builder.Services.AddInversionOfControlHandler();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHealthChecks();

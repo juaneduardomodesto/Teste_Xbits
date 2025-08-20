@@ -17,5 +17,6 @@ public static class InversionOfControlHandler
             .AddValidationContainer()
             .AddPaginationContainer()
             .AddMapperContainer()
-            .AddServiceContainer();
+            .AddServiceContainer()
+            .AddRepositoryContainer();
 }
