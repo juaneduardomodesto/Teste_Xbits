@@ -9,7 +9,7 @@ namespace Teste_Xbits.Api.Controllers;
 
 [Route("api/[Controller]")]
 [ApiController]
-public class LoginController(ILoginQueryService loginQueryService) : Controller
+public class LoginController(ILoginQueryService loginQueryService) : ControllerBase
 {
     [AllowAnonymous]
     [HttpPost("login")]
