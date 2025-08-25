@@ -25,26 +25,29 @@ public sealed class UserRepository(
     public Task<bool> DeleteAsync(User user)
     {
         DetachedObject(user);
-        DbSetContext.Update(user);
+        DbSetContext.Remove(user);
         return SaveInDatabaseAsync();
     }
 
     public Task<bool> UpdateAsync(User user)
     {
-        DbSetContext.Remove(user);
+        DbSetContext.Update(user);
         return SaveInDatabaseAsync();
     }
 
     public Task<User?> FindByPredicateAsync(
         Expression<Func<User, bool>> predicate,
-        Func<IQueryable<User>, IIncludableQueryable<User, object>>? include = null,
+        Func<IQueryable<User>, IQueryable<User>>? include = null,
         bool asNoTracking = false)
     {
         IQueryable<User> query = DbSetContext;
+
         if (asNoTracking)
             query = query.AsNoTracking();
+
         if (include is not null)
             query = include(query);
+
         return query.OrderByDescending(x => x.CreatedAt).FirstOrDefaultAsync(predicate);
     }
 

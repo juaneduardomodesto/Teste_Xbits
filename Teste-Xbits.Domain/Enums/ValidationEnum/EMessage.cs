@@ -26,5 +26,8 @@ public enum EMessage : ushort
     InvalidCredentials,
     
     [Description("Erro ao gerar token.")]
-    TokenError
+    TokenError,
+    
+    [Description("Id invalido.")]
+    InvalidId,
 }

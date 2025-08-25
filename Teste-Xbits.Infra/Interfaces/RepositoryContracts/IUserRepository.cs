@@ -13,11 +13,11 @@ public interface IUserRepository
 
     Task<bool> UpdateAsync(User user);
     
-    Task<User?> FindByPredicateAsync(
+    public Task<User?> FindByPredicateAsync(
         Expression<Func<User, bool>> predicate,
-        Func<IQueryable<User>, IIncludableQueryable<User, object>>? include = null,
+        Func<IQueryable<User>, IQueryable<User>>? include = null,
         bool asNoTracking = false);
-
+    
     Task<PageList<User>> FindAllWithPaginationAsync(PageParams pageParams,
         Expression<Func<User, bool>>? predicate = null, 
         Func<IQueryable<User>, 

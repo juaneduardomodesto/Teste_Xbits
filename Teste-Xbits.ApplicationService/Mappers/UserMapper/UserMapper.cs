@@ -1,15 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Request.UserRegister;
+using Teste_Xbits.ApplicationService.DataTransferObjects.Response.UserResponse;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 using Teste_Xbits.Domain.Entities;
 using Teste_Xbits.Domain.Extensions;
+using Teste_Xbits.Domain.Handlers.PaginationHandler;
 
-namespace Teste_Xbits.ApplicationService.Mappers.UserRegisterMapper;
+namespace Teste_Xbits.ApplicationService.Mappers.UserMapper;
 
 public class UserMapper : IUserMapper
 {
     private readonly string _applicationSalt;
-    
+
     public UserMapper(IConfiguration configuration)
     {
         _applicationSalt = configuration["Security:PasswordSalt"];
@@ -28,4 +30,44 @@ public class UserMapper : IUserMapper
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
+
+    public User DtoUpdateToDomain(UserUpdateRequest dtoUpdate, long userId) =>
+        new()
+        {
+            Id = userId,
+            Name = dtoUpdate.Name,
+            Email = dtoUpdate.Email,
+            Cpf = dtoUpdate.Cpf,
+            PasswordHash = dtoUpdate.Password.ConvertMd5(_applicationSalt),
+            AcceptPrivacyPolicy = dtoUpdate.AcceptPrivacyPolicy,
+            AcceptTermsOfUse = dtoUpdate.AcceptTermsOfUse,
+            IsActive = true,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+        };
+
+    public UserResponse DomainToSimpleResponse(User user)
+    {
+        return new UserResponse()
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Cpf = user.Cpf,
+            AcceptPrivacyPolicy = user.AcceptPrivacyPolicy,
+            AcceptTermsOfUse = user.AcceptTermsOfUse,
+            IsActive = user.IsActive,
+        };
+    }
+
+    public PageList<UserResponse> DomainToPaginationUserResponse(PageList<User> userPageList)
+    {
+        var responses = userPageList.Items.Select(DomainToSimpleResponse).ToList();
+
+        return new PageList<UserResponse>(
+            responses,
+            userPageList.TotalCount,
+            userPageList.CurrentPage,
+            userPageList.PageSize);
+    }
 }

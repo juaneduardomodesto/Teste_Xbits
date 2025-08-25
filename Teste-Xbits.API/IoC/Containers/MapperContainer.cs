@@ -1,7 +1,7 @@
 ﻿using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 using Teste_Xbits.ApplicationService.Mappers.LoginMapper;
 using Teste_Xbits.ApplicationService.Mappers.TokenMapper;
-using Teste_Xbits.ApplicationService.Mappers.UserRegisterMapper;
+using Teste_Xbits.ApplicationService.Mappers.UserMapper;
 
 namespace Teste_Xbits.API.IoC.Containers;
 
