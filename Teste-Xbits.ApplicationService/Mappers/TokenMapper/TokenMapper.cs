@@ -1,7 +1,5 @@
-﻿using Teste_Xbits.ApplicationService.DataTransferObjects.Request.LoginRequest;
-using Teste_Xbits.ApplicationService.DataTransferObjects.Response;
+﻿using Teste_Xbits.ApplicationService.DataTransferObjects.Response.TokenResponse;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
-using Teste_Xbits.Domain.Entities;
 
 namespace Teste_Xbits.ApplicationService.Mappers.TokenMapper;
 

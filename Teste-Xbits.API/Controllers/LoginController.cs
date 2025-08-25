@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Request.LoginRequest;
-using Teste_Xbits.ApplicationService.DataTransferObjects.Response;
+using Teste_Xbits.ApplicationService.DataTransferObjects.Response.LoginResponse;
 using Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
 using Teste_Xbits.Domain.Handlers.NotificationHandler;
 
@@ -18,6 +18,5 @@ public class LoginController(ILoginQueryService loginQueryService) : ControllerB
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<LoginResponse?> Login([FromBody] LoginRequest registerRequest) =>
         loginQueryService.Login(registerRequest);
-    
     
 }

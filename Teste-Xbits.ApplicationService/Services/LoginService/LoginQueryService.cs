@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Request.LoginRequest;
-using Teste_Xbits.ApplicationService.DataTransferObjects.Response;
+using Teste_Xbits.ApplicationService.DataTransferObjects.Response.LoginResponse;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 using Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
 using Teste_Xbits.Domain.Entities;

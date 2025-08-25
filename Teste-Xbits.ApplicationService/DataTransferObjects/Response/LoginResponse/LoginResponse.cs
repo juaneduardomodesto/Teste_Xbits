@@ -1,4 +1,4 @@
-﻿namespace Teste_Xbits.ApplicationService.DataTransferObjects.Response;
+﻿namespace Teste_Xbits.ApplicationService.DataTransferObjects.Response.LoginResponse;
 
 public record LoginResponse
 {
