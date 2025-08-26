@@ -19,6 +19,9 @@ public enum EMessage : ushort
     [Description("Usuario não encontrado.")]
     UserNotFound,
     
+    [Description("Não encontrado.")]
+    NotFound,
+    
     [Description("Usuario inativo no sistema.")]
     InactiveUser,
     

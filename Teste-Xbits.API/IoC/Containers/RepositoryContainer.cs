@@ -10,6 +10,7 @@ public static class RepositoryContainer
         services.AddScoped<IDomainLoggerRepository, DomainLoggerRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenRepository, TokenRepository>();
+        services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
         return services;
     }
 }

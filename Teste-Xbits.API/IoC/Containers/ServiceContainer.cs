@@ -1,7 +1,8 @@
 ﻿using Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
 using Teste_Xbits.ApplicationService.Services.LoginService;
-using Teste_Xbits.ApplicationService.Services.Register;
+using Teste_Xbits.ApplicationService.Services.ProductCategoryService;
 using Teste_Xbits.ApplicationService.Services.TokenService;
+using Teste_Xbits.ApplicationService.Services.UserService;
 
 namespace Teste_Xbits.API.IoC.Containers;
 
@@ -13,6 +14,8 @@ public static class ServiceContainer
         services.AddScoped<IUserCommandService, UserCommandService>();
         services.AddScoped<IUserQueryService,  UserQueryService>();
         services.AddScoped<ITokenCommandService, TokenCommandCommandService>();
+        services.AddScoped<IProductCategoryCommandService, ProductCategoryCommandService>();
+        services.AddScoped<IProductCategoryQueryService, ProductCategoryQueryService>();
         return services;
     }
 }

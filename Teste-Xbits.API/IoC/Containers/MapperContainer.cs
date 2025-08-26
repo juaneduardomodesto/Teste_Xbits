@@ -1,5 +1,6 @@
 ﻿using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 using Teste_Xbits.ApplicationService.Mappers.LoginMapper;
+using Teste_Xbits.ApplicationService.Mappers.ProductCategoryMapper;
 using Teste_Xbits.ApplicationService.Mappers.TokenMapper;
 using Teste_Xbits.ApplicationService.Mappers.UserMapper;
 
@@ -12,6 +13,7 @@ public static class MapperContainer
         services.AddScoped<IUserMapper, UserMapper>();
         services.AddScoped<ITokenMapper, TokenMapper>();
         services.AddScoped<ILoginMapper, LoginMapper>();
+        services.AddScoped<IProductCategoryMapper, ProductCategoryMapper>();
         return services;
     }
 }

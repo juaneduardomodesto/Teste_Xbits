@@ -11,6 +11,7 @@ public static class ValidationContainer
         services.AddScoped<IValidate<Login>, LoginValidation>();
         services.AddScoped<IValidate<User>, UserValidation>();
         services.AddScoped<IValidate<Token>, TokenValidation>();
+        services.AddScoped<IValidate<ProductCategory>, ProductCategoryValidation>();
         return services;
     }
 }

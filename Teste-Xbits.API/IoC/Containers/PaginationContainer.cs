@@ -10,6 +10,7 @@ public static class PaginationContainer
     {
         services.AddScoped(typeof(IPaginationQueryService<>), typeof(PaginationQueryService<>));
         services.AddScoped<IPaginationQueryService<User>, PaginationQueryService<User>>();
+        services.AddScoped<IPaginationQueryService<ProductCategory>, PaginationQueryService<ProductCategory>>();
         return services;
     }
 }
