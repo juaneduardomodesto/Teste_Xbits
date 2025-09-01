@@ -43,8 +43,8 @@ public class ProductCategoryController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
-    public Task<ProductCategoryResponse?> FindById([FromQuery] long userId) =>
-        categoryQueryService.FindByIdAsync(userId);
+    public Task<ProductCategoryResponse?> FindById([FromQuery] long productCategoryId) =>
+        categoryQueryService.FindByIdAsync(productCategoryId);
     
     [Authorize]
     [HttpGet("list_product_category_paginated")]

@@ -10,36 +10,23 @@ using Teste_Xbits.Infra.Interfaces.RepositoryContracts;
 
 namespace Teste_Xbits.ApplicationService.Services.ProductCategoryService;
 
-public class ProductCategoryQueryService : ServiceBase<ProductCategory>, IProductCategoryQueryService
+public class ProductCategoryQueryService(
+    INotificationHandler notificationHandler,
+    IValidate<ProductCategory> validate,
+    ILoggerHandler loggerHandler,
+    IProductCategoryMapper productCategoryMapper,
+    IProductCategoryRepository productCategoryRepository)
+    : ServiceBase<ProductCategory>(notificationHandler, validate, loggerHandler), IProductCategoryQueryService
 {
-    private readonly INotificationHandler _notificationHandler;
-    private readonly IValidate<ProductCategory> _validate;
-    private readonly ILoggerHandler _loggerHandler;
-    private readonly IProductCategoryMapper _productCategoryMapper;
-    private readonly IProductCategoryRepository _productCategoryRepository;
+    private readonly ILoggerHandler _loggerHandler = loggerHandler;
 
-    public ProductCategoryQueryService(
-        INotificationHandler notificationHandler,
-        IValidate<ProductCategory> validate,
-        ILoggerHandler loggerHandler,
-        IProductCategoryMapper productCategoryMapper,
-        IProductCategoryRepository productCategoryRepository) 
-        : base(notificationHandler, validate, loggerHandler)
-    {
-        _notificationHandler = notificationHandler;
-        _validate = validate;
-        _loggerHandler = loggerHandler;
-        _productCategoryMapper = productCategoryMapper;
-        _productCategoryRepository = productCategoryRepository;
-    }
-    
     public async Task<ProductCategoryResponse?> FindByIdAsync(long id)
     {
-        var productCategory = await _productCategoryRepository.FindByPredicateAsync(x => x.Id == id);
+        var productCategory = await productCategoryRepository.FindByPredicateAsync(x => x.Id == id);
 
         return productCategory is null
             ? null
-            : _productCategoryMapper.DomainToSimpleResponse(productCategory);
+            : productCategoryMapper.DomainToSimpleResponse(productCategory);
     }
 
     public async Task<PageList<ProductCategoryResponse>> FindAllWithPaginationAsync(string? namePrefix, string? descriptionPrefix, string? codePrefix, PageParams pageParams)
@@ -66,14 +53,14 @@ public class ProductCategoryQueryService : ServiceBase<ProductCategory>, IProduc
                     e.ProductCategoryCode.StartsWith(codePrefix));
             }
 
-            var productCategoryList = await _productCategoryRepository.FindAllWithPaginationAsync(
+            var productCategoryList = await productCategoryRepository.FindAllWithPaginationAsync(
                 pageParams,
                 predicate
             );
 
             return !productCategoryList.Items.Any()
                 ? new PageList<ProductCategoryResponse>()
-                : _productCategoryMapper.DomainToPaginationUserResponse(productCategoryList);
+                : productCategoryMapper.DomainToPaginationUserResponse(productCategoryList);
         }
         catch (Exception ex)
         {
