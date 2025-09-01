@@ -5,12 +5,12 @@ namespace Teste_Xbits.ApplicationService.Mappers.TokenMapper;
 
 public class TokenMapper : ITokenMapper
 {
-    public TokenResponse MapToTokenResponse(string accessToken, string username, int expireIn)
+    public TokenResponse MapToTokenResponse(string accessToken, string userIdentifier, int expireIn)
     {
         return new TokenResponse
         {
             AccessToken = accessToken,
-            Username = username,
+            UserIdentifier = userIdentifier,
             ExpireIn = expireIn,
         };
     }

@@ -2,8 +2,7 @@
 
 public record TokenResponse
 {
-    public string AccessToken { get; set; }
-    public string TokenType { get; set; } = "Bearer";
-    public string Username { get; set; }
+    public required string AccessToken { get; set; }
+    public required string UserIdentifier { get; set; }
     public int ExpireIn { get; set; }
 }

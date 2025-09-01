@@ -9,60 +9,41 @@ using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 using Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
 using Teste_Xbits.Domain.Entities;
 using Teste_Xbits.Domain.Interface;
-using Teste_Xbits.Infra.Interfaces.RepositoryContracts;
-using Teste_Xbits.Infra.ORM.Context;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace Teste_Xbits.ApplicationService.Services.TokenService;
 
-public class TokenCommandCommandService : ServiceBase<Token>, ITokenCommandService
+public class TokenCommandCommandService(
+    IConfiguration configuration,
+    INotificationHandler notification,
+    ITokenMapper tokenMapper,
+    IValidate<Token> validate,
+    ILoggerHandler logger)
+    : ServiceBase<Token>(notification, validate, logger), ITokenCommandService
 {
-    private readonly ApplicationContext _context;
-    private readonly IValidate<Token> _validate;
-    private readonly ILoggerHandler _loggerHandler;
-    private readonly IConfiguration _configuration;
-    private readonly INotificationHandler _notification;
-    private readonly ITokenMapper _tokenMapper;
-    private readonly ITokenRepository _tokenRepository;
-
-    public TokenCommandCommandService(
-        ApplicationContext dbContext,
-        IConfiguration configuration,
-        INotificationHandler notification,
-        ITokenMapper tokenMapper,
-        IValidate<Token> validate,
-        ILoggerHandler logger,
-        ITokenRepository tokenRepository)
-        : base(notification, validate, logger)
-    {
-        this._configuration = configuration;
-        this._context = dbContext;
-        this._notification = notification;
-        this._tokenMapper = tokenMapper;
-        this._tokenRepository = tokenRepository;
-    }
 
     public async Task<TokenResponse?> Authentication(LoginRequest dtoLogin)
     {
-        var issuer = _configuration["Jwt:Issuer"];
-        var audience = _configuration["Jwt:Audience"];
-        var key = _configuration["Jwt:JwtKey"]; // Corrigido para "JwtKey"
-        var durationInMinutes = int.Parse(_configuration["Jwt:DurationInMinutes"]);
-        var tokenExpirityTimeStamp = DateTime.UtcNow.AddMinutes(durationInMinutes);
+        await Task.CompletedTask;
+        
+        var issuer = configuration["Jwt:Issuer"];
+        var audience = configuration["Jwt:Audience"];
+        var key = configuration["Jwt:JwtKey"];
+        var durationInMinutes = int.Parse(configuration["Jwt:DurationInMinutes"]!);
+        var tokenExpiryTimeStamp = DateTime.UtcNow.AddMinutes(durationInMinutes);
 
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
-            Subject = new ClaimsIdentity(new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, dtoLogin.Email),
-                new Claim(JwtRegisteredClaimNames.Email, dtoLogin.Email),
+            Subject = new ClaimsIdentity([
+                new Claim(JwtRegisteredClaimNames.Sub, dtoLogin.Email!),
+                new Claim(JwtRegisteredClaimNames.Email, dtoLogin.Email!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }),
-            Expires = tokenExpirityTimeStamp,
+            ]),
+            Expires = tokenExpiryTimeStamp,
             Issuer = issuer,
             Audience = audience,
             SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)), // Usando UTF8 instead of ASCII
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key!)),
                 SecurityAlgorithms.HmacSha256Signature),
         };
 
@@ -70,9 +51,9 @@ public class TokenCommandCommandService : ServiceBase<Token>, ITokenCommandServi
         var securityToken = tokenHandler.CreateToken(tokenDescriptor);
         var accessToken = tokenHandler.WriteToken(securityToken);
 
-        return _tokenMapper.MapToTokenResponse(
+        return tokenMapper.MapToTokenResponse( 
             accessToken,
-            dtoLogin.Email,
-            (int)tokenExpirityTimeStamp.Subtract(DateTime.UtcNow).TotalSeconds);
+            dtoLogin.Email!,
+            (int)tokenExpiryTimeStamp.Subtract(DateTime.UtcNow).TotalSeconds);
     }
 }

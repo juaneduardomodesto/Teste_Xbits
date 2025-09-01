@@ -4,5 +4,5 @@ namespace Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 
 public interface ITokenMapper
 {
-    TokenResponse MapToTokenResponse(string accessToken, string username, int expireIn);
+    TokenResponse MapToTokenResponse(string accessToken, string userIdentifier, int expireIn);
 }

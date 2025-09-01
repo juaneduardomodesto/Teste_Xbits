@@ -2,7 +2,7 @@
 
 public record LoginResponse
 {
-    public string? Username { get; set; }
+    public string? UserIdentifier { get; set; }
     public string? Token { get; set; }
     public long? ExpireIn { get; set; }
 }

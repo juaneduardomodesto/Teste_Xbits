@@ -10,7 +10,7 @@ public class LoginMapper : ILoginMapper
     public LoginResponse DtoToLoginResponse(LoginRequest dtoLogin, TokenResponse tokenResponse) =>
         new()
         {
-            Username = dtoLogin.Email,
+            UserIdentifier = dtoLogin.Email,
             Token = tokenResponse.AccessToken,
             ExpireIn = tokenResponse.ExpireIn,
         };
