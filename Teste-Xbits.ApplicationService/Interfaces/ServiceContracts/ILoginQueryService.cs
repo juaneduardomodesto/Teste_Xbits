@@ -5,5 +5,5 @@ namespace Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
 
 public interface ILoginQueryService
 {
-    Task<LoginResponse?> Login(LoginRequest dtoLogin);
+    Task<LoginResponse?> LoginAsync(LoginRequest dtoLogin);
 }

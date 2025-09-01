@@ -17,6 +17,6 @@ public class LoginController(ILoginQueryService loginQueryService) : ControllerB
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<LoginResponse?> Login([FromBody] LoginRequest registerRequest) =>
-        loginQueryService.Login(registerRequest);
+        loginQueryService.LoginAsync(registerRequest);
     
 }
