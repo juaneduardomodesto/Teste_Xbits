@@ -5,5 +5,5 @@ namespace Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
 
 public interface ITokenCommandService
 {
-    public Task<TokenResponse?> Authentication(LoginRequest dtoLogin);
+    public Task<TokenResponse?> Authentication(LoginRequest dtoLogin, Guid userGuid);
 }

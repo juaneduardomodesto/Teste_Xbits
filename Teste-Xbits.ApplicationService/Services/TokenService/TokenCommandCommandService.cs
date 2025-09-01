@@ -22,7 +22,7 @@ public class TokenCommandCommandService(
     : ServiceBase<Token>(notification, validate, logger), ITokenCommandService
 {
 
-    public async Task<TokenResponse?> Authentication(LoginRequest dtoLogin)
+    public async Task<TokenResponse?> Authentication(LoginRequest dtoLogin, Guid userGuid )
     {
         await Task.CompletedTask;
         
@@ -35,7 +35,7 @@ public class TokenCommandCommandService(
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity([
-                new Claim(JwtRegisteredClaimNames.Sub, dtoLogin.Email!),
+                new Claim(JwtRegisteredClaimNames.Sub, userGuid.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, dtoLogin.Email!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             ]),

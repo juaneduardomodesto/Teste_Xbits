@@ -13,6 +13,7 @@ public static class ServiceContainer
     {
         services.AddScoped<ILoginQueryService, LoginQueryService>();
         services.AddScoped<IUserCommandService, UserCommandService>();
+        services.AddScoped<IUserCommandFacadeService, UserCommandService>();
         services.AddScoped<IUserQueryService,  UserQueryService>();
         services.AddScoped<ITokenCommandService, TokenCommandCommandService>();
         services.AddScoped<IProductCategoryCommandService, ProductCategoryCommandService>();

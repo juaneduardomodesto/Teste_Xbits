@@ -74,7 +74,7 @@ public class LoginQueryService(
 
         #endregion
         
-        var token = await tokenCommandService.Authentication(dtoLogin);
+        var token = await tokenCommandService.Authentication(dtoLogin, Guid.NewGuid());
         if (token == null)
         {
             _notificationHandler.CreateNotification(
