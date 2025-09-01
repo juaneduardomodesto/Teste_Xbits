@@ -1,6 +1,6 @@
 ﻿namespace Teste_Xbits.ApplicationService.Traces;
 
-public class ProductCategoryTrace
+public static class ProductCategoryTrace
 {
     public const string Save = "Cadastro de Categoria de produto";
     public const string Update = "Atualização de Categoria de produto";
