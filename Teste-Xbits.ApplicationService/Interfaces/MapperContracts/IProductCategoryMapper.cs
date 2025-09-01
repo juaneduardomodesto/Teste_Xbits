@@ -9,6 +9,6 @@ public interface IProductCategoryMapper
 {
     ProductCategory DtoRegisterToDomain(ProductCategoryRegisterRequest dtoRegister);
     ProductCategory DtoUpdateToDomain(ProductCategoryUpdateRequest dtoUpdate, long productCategoryId);
-    ProductCategoryResponse DomainToSimpleResponse(ProductCategory user);
+    ProductCategoryResponse DomainToSimpleResponse(ProductCategory productCategory);
     public PageList<ProductCategoryResponse> DomainToPaginationUserResponse(PageList<ProductCategory> userPageList);
 }

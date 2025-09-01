@@ -22,6 +22,9 @@ public enum EMessage : ushort
     [Description("Não encontrado.")]
     NotFound,
     
+    [Description("{0} não encontrado.")]
+    ItemNotFound,
+    
     [Description("Usuario inativo no sistema.")]
     InactiveUser,
     
@@ -33,4 +36,16 @@ public enum EMessage : ushort
     
     [Description("Id invalido.")]
     InvalidId,
+    
+    [Description("{0} em formato incorreto.")]
+    InvalidValue,
+    
+    [Description("Valor monetario invalido.")]
+    InvalidMonetaryValue,
+    
+    [Description("Produto não encontrado.")]
+    ProductNotFound,
+    
+    [Description("Categoria não encontrada.")]
+    CategoryNotFound
 }

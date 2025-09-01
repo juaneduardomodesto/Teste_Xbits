@@ -29,15 +29,15 @@ public class ProductCategoryMapper : IProductCategoryMapper
             UpdatedAt = DateTime.UtcNow,
         };
 
-    public ProductCategoryResponse DomainToSimpleResponse(ProductCategory user) =>
+    public ProductCategoryResponse DomainToSimpleResponse(ProductCategory productCategory) =>
         new()
         {
-            Id = user.Id!,
-            Name = user.Name!,
-            Description = user.Description!,
-            ProductCategoryCode = user.ProductCategoryCode,
+            Id = productCategory.Id,
+            Name = productCategory.Name,
+            Description = productCategory.Description,
+            ProductCategoryCode = productCategory.ProductCategoryCode
         };
-
+    
     public PageList<ProductCategoryResponse> DomainToPaginationUserResponse(PageList<ProductCategory> userPageList)
     {
         var responses = userPageList.Items.Select(DomainToSimpleResponse).ToList();

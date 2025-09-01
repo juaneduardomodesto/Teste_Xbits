@@ -8,4 +8,5 @@ public record ProductCategory : BaseEntity
     public required string Name { get; init; }
     public required string Description { get; init; }
     public required string ProductCategoryCode { get; init; }
+    public virtual ICollection<Product> Products { get; init; } = new List<Product>();
 }
