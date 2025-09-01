@@ -7,7 +7,7 @@ namespace Teste_Xbits.Infra.Interfaces.RepositoryContracts;
 
 public interface IUserRepository
 {
-    Task<User> SaveAsync(User user);
+    Task<bool> SaveAsync(User user);
 
     Task<bool> DeleteAsync(User user);
 

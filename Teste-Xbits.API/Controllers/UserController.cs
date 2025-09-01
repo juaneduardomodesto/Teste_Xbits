@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Teste_Xbits.API.Extensions;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Request.UserRegister;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Response.UserResponse;
 using Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
@@ -15,13 +16,13 @@ public class UserController(
     IUserQueryService userQueryService) 
     : ControllerBase
 {
-    [AllowAnonymous]
+    [Authorize]
     [HttpPost("register_user")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<bool> RegisterUser([FromBody] UserRegisterRequest dtoRegister) =>
-        userCommandService.RegisterUserAsync(dtoRegister);
+        userCommandService.RegisterUserAsync(dtoRegister, User.GetUserId(), false);
     
     [Authorize]
     [HttpPut("update_user")]
@@ -29,7 +30,7 @@ public class UserController(
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<bool> UpdateUser([FromBody] UserUpdateRequest dtoUpdate) =>
-        userCommandService.UpdateUserAsync(dtoUpdate);
+        userCommandService.UpdateUserAsync(dtoUpdate, User.GetUserCredential());
     
     [Authorize]
     [HttpDelete("delete_user")]
@@ -37,7 +38,7 @@ public class UserController(
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<bool> DeleteUser([FromBody] UserDeleteRequest dtoDelete) =>
-        userCommandService.DeleteUserAsync(dtoDelete);
+        userCommandService.DeleteUserAsync(dtoDelete, User.GetUserCredential());
 
     [Authorize]
     [HttpGet("get_by_id")]

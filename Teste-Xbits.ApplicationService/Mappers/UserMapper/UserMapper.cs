@@ -8,14 +8,9 @@ using Teste_Xbits.Domain.Handlers.PaginationHandler;
 
 namespace Teste_Xbits.ApplicationService.Mappers.UserMapper;
 
-public class UserMapper : IUserMapper
+public class UserMapper(IConfiguration configuration) : IUserMapper
 {
-    private readonly string _applicationSalt;
-
-    public UserMapper(IConfiguration configuration)
-    {
-        _applicationSalt = configuration["Security:PasswordSalt"];
-    }
+    private readonly string? _applicationSalt = configuration["Security:PasswordSalt"];
 
     public User DtoRegisterToDomain(UserRegisterRequest dtoRegister) =>
         new()
@@ -23,7 +18,7 @@ public class UserMapper : IUserMapper
             Name = dtoRegister.Name,
             Email = dtoRegister.Email,
             Cpf = dtoRegister.Cpf,
-            PasswordHash = dtoRegister.Password.ConvertMd5(_applicationSalt),
+            PasswordHash = dtoRegister.Password.ConvertMd5(_applicationSalt!),
             AcceptPrivacyPolicy = dtoRegister.AcceptPrivacyPolicy,
             AcceptTermsOfUse = dtoRegister.AcceptTermsOfUse,
             IsActive = true,
@@ -38,7 +33,7 @@ public class UserMapper : IUserMapper
             Name = dtoUpdate.Name,
             Email = dtoUpdate.Email,
             Cpf = dtoUpdate.Cpf,
-            PasswordHash = dtoUpdate.Password.ConvertMd5(_applicationSalt),
+            PasswordHash = dtoUpdate.Password.ConvertMd5(_applicationSalt!),
             AcceptPrivacyPolicy = dtoUpdate.AcceptPrivacyPolicy,
             AcceptTermsOfUse = dtoUpdate.AcceptTermsOfUse,
             IsActive = true,

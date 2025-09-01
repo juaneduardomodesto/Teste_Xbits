@@ -16,12 +16,12 @@ public class UserCommandService(
     ILoggerHandler logger,
     IUserMapper userMapper,
     IUserRepository userRepository)
-    : ServiceBase<User>(notification, validate, logger), IUserCommandService
+    : ServiceBase<User>(notification, validate, logger), IUserCommandService, IUserCommandFacadeService
 {
     private readonly INotificationHandler _notificationHandler = notification;
     private readonly ILoggerHandler _loggerHandler = logger;
 
-    public async Task<bool> RegisterUserAsync(UserRegisterRequest dtoRegister)
+    public async Task<bool> RegisterUserAsync(UserRegisterRequest dtoRegister, Guid userId, bool firstUser)
     {
         #region Validations
         
@@ -79,11 +79,15 @@ public class UserCommandService(
         var mappedUser = userMapper.DtoRegisterToDomain(dtoRegister);
         if (!await EntityValidationAsync(mappedUser)) return false;
         
-        _ = await userRepository.SaveAsync(mappedUser);
+        var result = await userRepository.SaveAsync(mappedUser);
+        if (result && !firstUser)
+        {
+            GenerateLogger(UserTracer.Save, userId, mappedUser.Id.ToString());
+        }
         return true;
     }
 
-    public async Task<bool> UpdateUserAsync(UserUpdateRequest dtoUpdate)
+    public async Task<bool> UpdateUserAsync(UserUpdateRequest dtoUpdate, UserCredential  userCredential)
     {
         #region Validations
         
@@ -151,17 +155,27 @@ public class UserCommandService(
         var updatedUser = userMapper.DtoUpdateToDomain(dtoUpdate, user.Id);
         if(!await EntityValidationAsync(updatedUser)) return false;
         
-        return await userRepository.UpdateAsync(updatedUser);
+        var result = await userRepository.UpdateAsync(updatedUser);
+        if (result)
+        {
+            GenerateLogger(UserTracer.Update, userCredential.Id, updatedUser.Id.ToString());
+        }
+        
+        return result;
     }
 
-    public async Task<bool> DeleteUserAsync(UserDeleteRequest dtoDelete)
+    public async Task<bool> DeleteUserAsync(UserDeleteRequest dtoDelete, UserCredential  userCredential)
     {
+        #region Validations
+        
         if (dtoDelete.Id == 0)
         {
             _notificationHandler.CreateNotification(
                 UserTracer.Delete,
                 EMessage.InvalidId.GetDescription().FormatTo("Id"));
         }
+        
+        #endregion
         
         var user = await userRepository.FindByPredicateAsync(x => x.Id == dtoDelete.Id);
         if (user == null)
@@ -171,8 +185,12 @@ public class UserCommandService(
                 EMessage.UserNotFound.GetDescription());
         }
         
-        if(await EntityValidationAsync(user!))  return false;
+        var result = await userRepository.DeleteAsync(user!);
+        if (result)
+        {
+            GenerateLogger(UserTracer.Delete, userCredential.Id, userCredential.Id.ToString());
+        }
         
-        return await userRepository.DeleteAsync(user!);
+        return result;
     }
 }

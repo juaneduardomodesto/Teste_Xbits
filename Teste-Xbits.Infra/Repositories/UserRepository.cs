@@ -15,11 +15,10 @@ public sealed class UserRepository(
     IPaginationQueryService<User> paginationQueryService )
     : RepositoryBase<User>(dbContext), IUserRepository
 {
-    public async Task<User> SaveAsync(User user)
+    public async Task<bool> SaveAsync(User user)
     {
         await DbSetContext.AddAsync(user);
-        await SaveInDatabaseAsync();
-        return user;
+        return await SaveInDatabaseAsync();
     }
 
     public Task<bool> DeleteAsync(User user)
