@@ -10,37 +10,22 @@ using Teste_Xbits.Infra.Interfaces.RepositoryContracts;
 
 namespace Teste_Xbits.ApplicationService.Services.UserService;
 
-public class UserQueryService : ServiceBase<User>, IUserQueryService
+public class UserQueryService(
+    INotificationHandler notification,
+    IValidate<User> validate,
+    ILoggerHandler logger,
+    IUserRepository userRepository,
+    IUserMapper userMapper)
+    : ServiceBase<User>(notification, validate, logger), IUserQueryService
 {
-    private readonly INotificationHandler notificationHandler;
-    private readonly ILoggerHandler logger;
-    private readonly IValidate<User> validate;
-    private readonly IUserRepository _userRepository;
-    private readonly IUserMapper _userMapper;
-
-    public UserQueryService(
-        INotificationHandler notification,
-        IValidate<User> validate,
-        ILoggerHandler logger,
-        IUserRepository userRepository,
-        IUserMapper userMapper)
-        : base(notification, validate, logger)
-    {
-        this.notificationHandler = notification;
-        this.validate = validate;
-        this.logger = logger;
-        this._userRepository  = userRepository;
-        this._userMapper = userMapper;
-    }
 
     public async Task<UserResponse?> FindByIdAsync(long id)
     {
-        var user = await _userRepository.FindByPredicateAsync(x => x.Id == id);
-        //Todo: connect products
+        var user = await userRepository.FindByPredicateAsync(x => x.Id == id);
 
         return user is null
             ? null
-            : _userMapper.DomainToSimpleResponse(user);
+            : userMapper.DomainToSimpleResponse(user);
     }
 
     public async Task<PageList<UserResponse>> FindAllWithPaginationAsync(
@@ -56,32 +41,29 @@ public class UserQueryService : ServiceBase<User>, IUserQueryService
             if (!string.IsNullOrEmpty(namePrefix))
             {
                 predicate = predicate.And(e =>
-                    e.Name != null &&
                     e.Name.StartsWith(namePrefix));
             }
 
             if (!string.IsNullOrEmpty(emailPrefix))
             {
                 predicate = predicate.And(e =>
-                    e.Email != null &&
                     e.Email.StartsWith(emailPrefix));
             }
 
             if (!string.IsNullOrEmpty(cpfPrefix))
             {
                 predicate = predicate.And(e =>
-                    e.Cpf != null &&
                     e.Cpf.StartsWith(cpfPrefix));
             }
 
-            var userList = await _userRepository.FindAllWithPaginationAsync(
+            var userList = await userRepository.FindAllWithPaginationAsync(
                 pageParams,
                 predicate
             );
 
             return !userList.Items.Any()
                 ? new PageList<UserResponse>()
-                : _userMapper.DomainToPaginationUserResponse(userList);
+                : userMapper.DomainToPaginationUserResponse(userList);
         }
         catch (Exception ex)
         {
