@@ -13,31 +13,22 @@ using Teste_Xbits.Infra.Interfaces.RepositoryContracts;
 
 namespace Teste_Xbits.ApplicationService.Services.ProductService;
 
-public class ProductQueryService : ServiceBase<Product>, IProductQueryService
+public class ProductQueryService(
+    INotificationHandler notificationHandler,
+    IValidate<Product> validate,
+    ILoggerHandler logger,
+    IProductRepository productRepository,
+    IProductMapper productMapper)
+    : ServiceBase<Product>(notificationHandler, validate, logger), IProductQueryService
 {
-    private readonly IProductRepository _productRepository;
-    private readonly IProductMapper _productMapper;
-
-    public ProductQueryService(
-        INotificationHandler notificationHandler,
-        IValidate<Product> validate,
-        ILoggerHandler logger,
-        IProductRepository productRepository,
-        IProductMapper productMapper)
-        : base(notificationHandler, validate, logger)
-    {
-        this._productRepository = productRepository;
-        this._productMapper = productMapper;
-    }
-
     public async Task<ProductResponse?> FindByIdAsync(long id)
     {
-        var product = await _productRepository.FindByPredicateAsync(x => x.Id == id,
+        var product = await productRepository.FindByPredicateAsync(x => x.Id == id,
             include: x => x.Include(y => y.ProductCategory));
 
         return product is null
             ? null
-            : _productMapper.DomainToSimpleResponse(product);
+            : productMapper.DomainToSimpleResponse(product);
     }
 
     public async Task<PageList<ProductResponse>> FindAllWithPaginationAsync(
@@ -112,7 +103,7 @@ public class ProductQueryService : ServiceBase<Product>, IProductQueryService
                 predicate = predicate.And(e => e.ProductCategoryId == productCategoryIdPrefix.Value);
             }
 
-            var productList = await _productRepository.FindAllWithPaginationAsync(
+            var productList = await productRepository.FindAllWithPaginationAsync(
                 pageParams,
                 predicate,
                 x => x.Include(x => x.ProductCategory)
@@ -120,7 +111,7 @@ public class ProductQueryService : ServiceBase<Product>, IProductQueryService
 
             return !productList.Items.Any()
                 ? new PageList<ProductResponse>()
-                : _productMapper.DomainToPaginationResponse(productList);
+                : productMapper.DomainToPaginationResponse(productList);
         }
         catch (Exception ex)
         {

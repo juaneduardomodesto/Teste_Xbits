@@ -1,6 +1,7 @@
 ﻿using Teste_Xbits.ApplicationService.DataTransferObjects.Request.ProductRequest;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 using Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
+using Teste_Xbits.ApplicationService.Traces;
 using Teste_Xbits.Domain.Entities;
 using Teste_Xbits.Domain.Enums.ValidationEnum;
 using Teste_Xbits.Domain.Extensions;
@@ -9,42 +10,28 @@ using Teste_Xbits.Infra.Interfaces.RepositoryContracts;
 
 namespace Teste_Xbits.ApplicationService.Services.ProductService;
 
-public class ProductCommandService : ServiceBase<Product>, IProductCommandService
+public class ProductCommandService(
+    INotificationHandler notification,
+    IValidate<Product> validate,
+    ILoggerHandler logger,
+    IProductMapper productMapper,
+    IProductRepository productRepository,
+    IProductCategoryRepository productCategoryRepository)
+    : ServiceBase<Product>(notification, validate, logger), IProductCommandService
 {
-    private readonly INotificationHandler _notificationHandler;
-    private readonly IValidate<Product> _validate;
-    private readonly ILoggerHandler _loggerHandler;
-    private readonly IProductMapper _productMapper;
-    private readonly IProductRepository _productRepository;
-    private readonly IProductCategoryRepository _productCategoryRepository;
-
-    public ProductCommandService(
-        INotificationHandler notification,
-        IValidate<Product> validate,
-        ILoggerHandler logger,
-        IProductMapper productMapper,
-        IProductRepository productRepository,
-        IProductCategoryRepository productCategoryRepository
-    ) : base(notification, validate, logger)
-    {
-        _notificationHandler = notification;
-        _validate = validate;
-        _loggerHandler = logger;
-        _productMapper = productMapper;
-        _productRepository = productRepository;
-        _productCategoryRepository = productCategoryRepository;
-    }
+    private readonly INotificationHandler _notificationHandler = notification;
+    private readonly ILoggerHandler _loggerHandler = logger;
 
     public async Task<bool> RegisterProductAsync(ProductRegisterRequest dtoRegister)
     {
         #region validation
         
-        var preExist = await _productRepository.FindByPredicateAsync(
+        var preExist = await productRepository.FindByPredicateAsync(
             x => x.Code == dtoRegister.Code);
         if (preExist != null)
         {
             _notificationHandler.CreateNotification(
-                "Registro",
+                ProductTrace.Save,
                 EMessage.Exist.GetDescription().FormatTo("Produto"));
             return false;
         }
@@ -52,7 +39,7 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
         if (string.IsNullOrEmpty(dtoRegister.Name))
         {
             _notificationHandler.CreateNotification(
-                "Registro",
+                ProductTrace.Save,
                 EMessage.Required.GetDescription().FormatTo("Nome"));
             return false;
         }
@@ -60,7 +47,7 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
         if (dtoRegister.Price <= 0)
         {
             _notificationHandler.CreateNotification(
-                "Registro",
+                ProductTrace.Save,
                 EMessage.InvalidMonetaryValue.GetDescription());
             return false;
         }
@@ -68,7 +55,7 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
         if (string.IsNullOrEmpty(dtoRegister.Code))
         {
             _notificationHandler.CreateNotification(
-                "Registro",
+                ProductTrace.Save,
                 EMessage.Required.GetDescription().FormatTo("Código do Produto"));
             return false;
         }
@@ -76,7 +63,7 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
         if (dtoRegister is { HasExpirationDate: true, ExpirationDate: null })
         {
             _notificationHandler.CreateNotification(
-                "Registro",
+                ProductTrace.Save,
                 EMessage.Required.GetDescription().FormatTo("Data de Validade"));
             return false;
         }
@@ -84,20 +71,20 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
         if (dtoRegister.ExpirationDate.HasValue && dtoRegister.ExpirationDate.Value < DateTime.Now)
         {
             _notificationHandler.CreateNotification(
-                "Registro",
+                ProductTrace.Save,
                 EMessage.InvalidValue.GetDescription().FormatTo("Data de Validade"));
             return false;
         }
         
         if (dtoRegister.ProductCategoryId is > 0)
         {
-            var productCategory = await _productCategoryRepository.FindByPredicateAsync(
+            var productCategory = await productCategoryRepository.FindByPredicateAsync(
                 x => x.Id == dtoRegister.ProductCategoryId.Value);
     
             if (productCategory == null)
             {
                 _notificationHandler.CreateNotification(
-                    "Registro",
+                    ProductTrace.Save,
                     EMessage.CategoryNotFound.GetDescription());
                 return false;
             }
@@ -105,10 +92,10 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
 
         #endregion
 
-        var mappedProduct = _productMapper.DtoRegisterToDomain(dtoRegister);
+        var mappedProduct = productMapper.DtoRegisterToDomain(dtoRegister);
         if (!await EntityValidationAsync(mappedProduct)) return false;
 
-        _ = await _productRepository.SaveAsync(mappedProduct);
+        _ = await productRepository.SaveAsync(mappedProduct);
         return true;
     }
 
@@ -116,12 +103,12 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
 {
     #region Validation
     
-    var existingProductWithCode = await _productRepository.FindByPredicateAsync(
+    var existingProductWithCode = await productRepository.FindByPredicateAsync(
         x => x.Code == dtoUpdate.Code && x.Id != dtoUpdate.ProductId);
     if (existingProductWithCode != null)
     {
         _notificationHandler.CreateNotification(
-            "Atualização",
+            ProductTrace.Update,
             EMessage.Exist.GetDescription().FormatTo("Código do Produto"));
         return false;
     }
@@ -129,7 +116,7 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
     if (dtoUpdate.ProductId <= 0)
     {
         _notificationHandler.CreateNotification(
-            "Atualização",
+            ProductTrace.Update,
             EMessage.ProductNotFound.GetDescription());
         return false;
     }
@@ -137,7 +124,7 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
     if (string.IsNullOrEmpty(dtoUpdate.Name))
     {
         _notificationHandler.CreateNotification(
-            "Atualização",
+            ProductTrace.Update,
             EMessage.Required.GetDescription().FormatTo("Nome"));
         return false;
     }
@@ -145,7 +132,7 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
     if (dtoUpdate.Price <= 0)
     {
         _notificationHandler.CreateNotification(
-            "Atualização",
+            ProductTrace.Update,
             EMessage.InvalidMonetaryValue.GetDescription());
         return false;
     }
@@ -153,7 +140,7 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
     if (string.IsNullOrEmpty(dtoUpdate.Code))
     {
         _notificationHandler.CreateNotification(
-            "Atualização",
+            ProductTrace.Update,
             EMessage.Required.GetDescription().FormatTo("Código do Produto"));
         return false;
     }
@@ -161,7 +148,7 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
     if (dtoUpdate is { HasExpirationDate: true, ExpirationDate: null })
     {
         _notificationHandler.CreateNotification(
-            "Atualização",
+            ProductTrace.Update,
             EMessage.Required.GetDescription().FormatTo("Data de Validade"));
         return false;
     }
@@ -169,20 +156,20 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
     if (dtoUpdate.ExpirationDate.HasValue && dtoUpdate.ExpirationDate.Value < DateTime.Now)
     {
         _notificationHandler.CreateNotification(
-            "Atualização",
+            ProductTrace.Update,
             EMessage.InvalidValue.GetDescription().FormatTo("Data de Validade"));
         return false;
     }
     
     if (dtoUpdate.ProductCategoryId is > 0)
     {
-        var productCategory = await _productCategoryRepository.FindByPredicateAsync(
+        var productCategory = await productCategoryRepository.FindByPredicateAsync(
             x => x.Id == dtoUpdate.ProductCategoryId.Value);
 
         if (productCategory == null)
         {
             _notificationHandler.CreateNotification(
-                "Atualização", 
+                ProductTrace.Update,
                 EMessage.CategoryNotFound.GetDescription());
             return false;
         }
@@ -190,19 +177,19 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
 
     #endregion
     
-    var product = await _productRepository.FindByPredicateAsync(x => x.Id == dtoUpdate.ProductId, asNoTracking: true);
+    var product = await productRepository.FindByPredicateAsync(x => x.Id == dtoUpdate.ProductId, asNoTracking: true);
     if (product == null)
     {
         _notificationHandler.CreateNotification(
-            "Atualização",
+            ProductTrace.Update,
             EMessage.ProductNotFound.GetDescription());
         return false;
     }
 
-    var updatedProduct = _productMapper.DtoUpdateToDomain(dtoUpdate, product.Id);
+    var updatedProduct = productMapper.DtoUpdateToDomain(dtoUpdate, product.Id);
     if (!await EntityValidationAsync(updatedProduct)) return false;
 
-    return await _productRepository.UpdateAsync(updatedProduct);
+    return await productRepository.UpdateAsync(updatedProduct);
 }
 
     public async Task<bool> DeleteProductAsync(ProductDeleteRequest dtoDelete)
@@ -212,14 +199,14 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
         if (dtoDelete.ProductId <= 0)
         {
             _notificationHandler.CreateNotification(
-                "Exclusão",
+                ProductTrace.Delete,
                 EMessage.ProductNotFound.GetDescription());
             return false;
         }
 
         #endregion
 
-        var product = await _productRepository.FindByPredicateAsync(x => x.Id == dtoDelete.ProductId);
+        var product = await productRepository.FindByPredicateAsync(x => x.Id == dtoDelete.ProductId);
         if (product == null)
         {
             _notificationHandler.CreateNotification(
@@ -230,6 +217,6 @@ public class ProductCommandService : ServiceBase<Product>, IProductCommandServic
 
         if (!await EntityValidationAsync(product)) return false;
 
-        return await _productRepository.DeleteAsync(product);
+        return await productRepository.DeleteAsync(product);
     }
 }
