@@ -22,6 +22,7 @@ public class ProductController(
     [HttpPost("register_product")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<bool> RegisterProduct([FromBody] ProductRegisterRequest dtoRegister) =>
         productCommandService.RegisterProductAsync(dtoRegister, User.GetUserCredential());
@@ -31,6 +32,7 @@ public class ProductController(
     [HttpPut("update_product")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<bool> UpdateProduct([FromBody] ProductUpdateRequest dtoUpdate) =>
         productCommandService.UpdateProductAsync(dtoUpdate, User.GetUserCredential());
@@ -39,6 +41,7 @@ public class ProductController(
     [HttpDelete("delete_product")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<bool> DeleteProduct([FromBody] ProductDeleteRequest dtoDelete) =>
         productCommandService.DeleteProductAsync(dtoDelete, User.GetUserCredential());
@@ -47,6 +50,7 @@ public class ProductController(
     [HttpGet("get_by_id")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<ProductResponse?> FindById([FromQuery] long productId) =>
         productQueryService.FindByIdAsync(productId);
@@ -55,6 +59,7 @@ public class ProductController(
     [HttpGet("list_products_paginated")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<PageList<ProductResponse>> GetProductsPaginated(
         [FromQuery] string? namePrefix,
