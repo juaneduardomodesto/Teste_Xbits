@@ -1,4 +1,6 @@
-﻿namespace Teste_Xbits.ApplicationService.DataTransferObjects.Response.UserResponse;
+﻿using Teste_Xbits.Domain.Enums;
+
+namespace Teste_Xbits.ApplicationService.DataTransferObjects.Response.UserResponse;
 
 public class UserResponse
 {
@@ -15,4 +17,6 @@ public class UserResponse
     public required bool AcceptTermsOfUse { get; init; }
     
     public bool IsActive { get; set; } = true;
+    
+    public ERoles Role { get; init; }
 }

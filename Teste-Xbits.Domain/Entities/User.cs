@@ -1,4 +1,5 @@
 ﻿using Teste_Xbits.Domain.Entities.Base;
+using Teste_Xbits.Domain.Enums;
 
 namespace Teste_Xbits.Domain.Entities;
 public record User : BaseEntity
@@ -18,4 +19,6 @@ public record User : BaseEntity
     public required bool AcceptTermsOfUse { get; init; }
     
     public bool IsActive { get; set; } = true;
+    
+    public ERoles Role { get; init; } = ERoles.Employee;
 }

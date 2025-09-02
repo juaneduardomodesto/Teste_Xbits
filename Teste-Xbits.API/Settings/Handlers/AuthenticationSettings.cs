@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -27,7 +28,9 @@ public static class AuthenticationSettings
                     ClockSkew = TimeSpan.Zero,
                     ValidAudience = jwtProvider.Audience,
                     ValidIssuer = jwtProvider.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtProvider.JwtKey))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtProvider.JwtKey)),
+                    RoleClaimType = ClaimTypes.Role,
+                    NameClaimType = ClaimTypes.Email
                 };
             })
             .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)

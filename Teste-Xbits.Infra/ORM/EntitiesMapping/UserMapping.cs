@@ -47,5 +47,11 @@ public sealed class UserMapping : MappingBase, IEntityTypeConfiguration<User>
             .HasColumnType("bit")
             .HasColumnName("accept_terms_of_use")
             .IsRequired(true);
+        
+        builder.Property(u => u.Role)
+            .HasColumnType("int")
+            .HasColumnName("role")
+            .IsRequired(true)
+            .HasConversion<int>();
     }
 }

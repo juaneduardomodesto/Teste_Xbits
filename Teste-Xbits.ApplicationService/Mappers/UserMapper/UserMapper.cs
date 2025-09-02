@@ -21,7 +21,8 @@ public class UserMapper(IConfiguration configuration) : IUserMapper
             PasswordHash = dtoRegister.Password.ConvertMd5(_applicationSalt!),
             AcceptPrivacyPolicy = dtoRegister.AcceptPrivacyPolicy,
             AcceptTermsOfUse = dtoRegister.AcceptTermsOfUse,
-            IsActive = true,
+            IsActive = dtoRegister.IsActive,
+            Role = dtoRegister.Roles,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
@@ -36,7 +37,8 @@ public class UserMapper(IConfiguration configuration) : IUserMapper
             PasswordHash = dtoUpdate.Password.ConvertMd5(_applicationSalt!),
             AcceptPrivacyPolicy = dtoUpdate.AcceptPrivacyPolicy,
             AcceptTermsOfUse = dtoUpdate.AcceptTermsOfUse,
-            IsActive = true,
+            IsActive = dtoUpdate.IsActive,
+            Role = dtoUpdate.Roles,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
         };
@@ -52,6 +54,7 @@ public class UserMapper(IConfiguration configuration) : IUserMapper
             AcceptPrivacyPolicy = user.AcceptPrivacyPolicy,
             AcceptTermsOfUse = user.AcceptTermsOfUse,
             IsActive = user.IsActive,
+            Role = user.Role,
         };
     }
 

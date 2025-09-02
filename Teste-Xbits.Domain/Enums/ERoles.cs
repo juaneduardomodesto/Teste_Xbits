@@ -2,11 +2,11 @@
 
 namespace Teste_Xbits.Domain.Enums;
 
-public enum ERoles
+public enum ERoles : uint
 {
     [Description("Administrador")]
-    Administrator,
+    Administrator = 1,
     
     [Description("Empregado")]
-    Employee,
+    Employee = 2,
 }

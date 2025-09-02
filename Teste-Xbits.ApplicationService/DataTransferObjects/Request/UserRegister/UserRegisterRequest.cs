@@ -18,5 +18,7 @@ public record UserRegisterRequest
 
     public required bool AcceptTermsOfUse { get; set; }
     
+    public required bool IsActive { get; set; }
+    
     public required ERoles Roles { get; init; }
 }

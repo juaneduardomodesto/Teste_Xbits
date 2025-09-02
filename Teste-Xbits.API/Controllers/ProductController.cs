@@ -18,7 +18,7 @@ public class ProductController(
     IProductQueryService productQueryService) 
     : ControllerBase
 {
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost("register_product")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -27,7 +27,7 @@ public class ProductController(
         productCommandService.RegisterProductAsync(dtoRegister, User.GetUserCredential());
     
     
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [HttpPut("update_product")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -35,7 +35,7 @@ public class ProductController(
     public Task<bool> UpdateProduct([FromBody] ProductUpdateRequest dtoUpdate) =>
         productCommandService.UpdateProductAsync(dtoUpdate, User.GetUserCredential());
     
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [HttpDelete("delete_product")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -43,7 +43,7 @@ public class ProductController(
     public Task<bool> DeleteProduct([FromBody] ProductDeleteRequest dtoDelete) =>
         productCommandService.DeleteProductAsync(dtoDelete, User.GetUserCredential());
 
-    [Authorize]
+    [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("get_by_id")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -51,7 +51,7 @@ public class ProductController(
     public Task<ProductResponse?> FindById([FromQuery] long productId) =>
         productQueryService.FindByIdAsync(productId);
 
-    [Authorize]
+    [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("list_products_paginated")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]

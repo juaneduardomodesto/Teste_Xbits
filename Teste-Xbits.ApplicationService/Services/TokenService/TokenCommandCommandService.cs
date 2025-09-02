@@ -8,6 +8,7 @@ using Teste_Xbits.ApplicationService.DataTransferObjects.Response.TokenResponse;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 using Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
 using Teste_Xbits.Domain.Entities;
+using Teste_Xbits.Domain.Enums;
 using Teste_Xbits.Domain.Interface;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
@@ -22,7 +23,7 @@ public class TokenCommandCommandService(
     : ServiceBase<Token>(notification, validate, logger), ITokenCommandService
 {
 
-    public async Task<TokenResponse?> Authentication(LoginRequest dtoLogin, Guid userGuid )
+    public async Task<TokenResponse?> Authentication(LoginRequest dtoLogin, Guid userGuid, ERoles role)
     {
         await Task.CompletedTask;
         
@@ -37,7 +38,8 @@ public class TokenCommandCommandService(
             Subject = new ClaimsIdentity([
                 new Claim(JwtRegisteredClaimNames.Sub, userGuid.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, dtoLogin.Email!),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, role.ToString())
             ]),
             Expires = tokenExpiryTimeStamp,
             Issuer = issuer,

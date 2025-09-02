@@ -16,7 +16,7 @@ public class UserController(
     IUserQueryService userQueryService) 
     : ControllerBase
 {
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost("register_user")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -24,7 +24,7 @@ public class UserController(
     public Task<bool> RegisterUser([FromBody] UserRegisterRequest dtoRegister) =>
         userCommandService.RegisterUserAsync(dtoRegister, User.GetUserId(), false);
     
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [HttpPut("update_user")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -32,7 +32,7 @@ public class UserController(
     public Task<bool> UpdateUser([FromBody] UserUpdateRequest dtoUpdate) =>
         userCommandService.UpdateUserAsync(dtoUpdate, User.GetUserCredential());
     
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [HttpDelete("delete_user")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -40,7 +40,7 @@ public class UserController(
     public Task<bool> DeleteUser([FromBody] UserDeleteRequest dtoDelete) =>
         userCommandService.DeleteUserAsync(dtoDelete, User.GetUserCredential());
 
-    [Authorize]
+    [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("get_by_id")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -48,7 +48,7 @@ public class UserController(
     public Task<UserResponse?> FindById([FromQuery] long userId) =>
         userQueryService.FindByIdAsync(userId);
     
-    [Authorize]
+    [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("list_users_paginated")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]

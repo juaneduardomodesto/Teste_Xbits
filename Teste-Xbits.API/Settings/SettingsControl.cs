@@ -12,6 +12,7 @@ public static class SettingsControl
         services.AddCorsSettings(configuration);
         services.AddDatabaseConnectionSettings();
         services.AddAuthenticationSettings(configuration);
+        services.AddAuthorizationSettings();
         services.AddFiltersSettings();
         services.AddSwaggerSettings();
         services.AddRateLimitingSettings();

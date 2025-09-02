@@ -15,7 +15,7 @@ public class ProductCategoryController(
     IProductCategoryCommandService productCategoryCommandService,
     IProductCategoryQueryService categoryQueryService) : ControllerBase
 {
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost("register_product_category")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -23,7 +23,7 @@ public class ProductCategoryController(
     public Task<bool> RegisterProductCategory([FromBody] ProductCategoryRegisterRequest dtoRegister) =>
         productCategoryCommandService.RegisterAsync(dtoRegister, User.GetUserCredential());
     
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [HttpPut("update_product_category")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -31,7 +31,7 @@ public class ProductCategoryController(
     public Task<bool> UpdateProductCategory([FromBody] ProductCategoryUpdateRequest dtoUpdate) =>
         productCategoryCommandService.UpdateRegisterAsync(dtoUpdate, User.GetUserCredential());
     
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [HttpDelete("delete_product_category")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -39,7 +39,7 @@ public class ProductCategoryController(
     public Task<bool> DeleteProductCategory([FromBody] ProductCategoryDeleteRequest dtoDelete) =>
         productCategoryCommandService.DeleteRegisterAsync(dtoDelete, User.GetUserCredential());
     
-    [Authorize]
+    [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("get_by_id")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
@@ -47,7 +47,7 @@ public class ProductCategoryController(
     public Task<ProductCategoryResponse?> FindById([FromQuery] long productCategoryId) =>
         categoryQueryService.FindByIdAsync(productCategoryId);
     
-    [Authorize]
+    [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("list_product_category_paginated")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
