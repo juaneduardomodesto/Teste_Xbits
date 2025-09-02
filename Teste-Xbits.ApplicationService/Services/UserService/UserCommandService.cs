@@ -19,7 +19,6 @@ public class UserCommandService(
     : ServiceBase<User>(notification, validate, logger), IUserCommandService, IUserCommandFacadeService
 {
     private readonly INotificationHandler _notificationHandler = notification;
-    private readonly ILoggerHandler _loggerHandler = logger;
 
     public async Task<bool> RegisterUserAsync(UserRegisterRequest dtoRegister, Guid userId, bool firstUser)
     {

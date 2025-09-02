@@ -20,7 +20,6 @@ public class ProductCommandService(
     : ServiceBase<Product>(notification, validate, logger), IProductCommandService
 {
     private readonly INotificationHandler _notificationHandler = notification;
-    private readonly ILoggerHandler _loggerHandler = logger;
 
     public async Task<bool> RegisterProductAsync(ProductRegisterRequest dtoRegister, UserCredential userCredential)
     {

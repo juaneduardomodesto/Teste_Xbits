@@ -19,7 +19,6 @@ public class ProductCategoryCommandService(
     : ServiceBase<ProductCategory>(notification, validate, logger), IProductCategoryCommandService
 {
     private readonly INotificationHandler _notificationHandler = notification;
-    private readonly ILoggerHandler _loggerHandler = logger;
 
     public async Task<bool> RegisterAsync(ProductCategoryRegisterRequest dtoRegister, UserCredential userCredential)
     {
