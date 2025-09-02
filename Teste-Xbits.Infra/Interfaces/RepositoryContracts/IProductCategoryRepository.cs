@@ -7,7 +7,7 @@ namespace Teste_Xbits.Infra.Interfaces.RepositoryContracts;
 
 public interface IProductCategoryRepository
 {
-    Task<ProductCategory> SaveAsync(ProductCategory dtoRegister);
+    Task<bool> SaveAsync(ProductCategory dtoRegister);
     Task<bool> DeleteAsync(ProductCategory dtoUpdate);
     Task<bool> UpdateAsync(ProductCategory dtoDelete);
     public Task<ProductCategory?> FindByPredicateAsync(

@@ -21,7 +21,7 @@ public class ProductCategoryCommandService(
     private readonly INotificationHandler _notificationHandler = notification;
     private readonly ILoggerHandler _loggerHandler = logger;
 
-    public async Task<bool> RegisterAsync(ProductCategoryRegisterRequest dtoRegister)
+    public async Task<bool> RegisterAsync(ProductCategoryRegisterRequest dtoRegister, UserCredential userCredential)
     {
         #region Validation
 
@@ -63,11 +63,15 @@ public class ProductCategoryCommandService(
         var mappedProdCategory = productCategoryMapper.DtoRegisterToDomain(dtoRegister);
         if (!await EntityValidationAsync(mappedProdCategory)) return false;
 
-        _ = await productCategoryRepository.SaveAsync(mappedProdCategory);
+        var result = await productCategoryRepository.SaveAsync(mappedProdCategory);
+        if (result)
+        {
+            GenerateLogger(ProductCategoryTrace.Save, userCredential.Id, mappedProdCategory.Id.ToString());
+        }
         return true;
     }
 
-    public async Task<bool> UpdateRegisterAsync(ProductCategoryUpdateRequest dtoUpdate)
+    public async Task<bool> UpdateRegisterAsync(ProductCategoryUpdateRequest dtoUpdate, UserCredential userCredential)
     {
         #region Validation
 
@@ -117,10 +121,15 @@ public class ProductCategoryCommandService(
         var updatedUser = productCategoryMapper.DtoUpdateToDomain(dtoUpdate, productCategory.Id);
         if(!await EntityValidationAsync(updatedUser)) return false;
         
-        return await productCategoryRepository.UpdateAsync(updatedUser);
+        var result = await productCategoryRepository.UpdateAsync(updatedUser);
+        if (result)
+        {
+            GenerateLogger(ProductCategoryTrace.Update, userCredential.Id, productCategory.Id.ToString());
+        }
+        return result;
     }
 
-    public async Task<bool> DeleteRegisterAsync(ProductCategoryDeleteRequest dtoDelete)
+    public async Task<bool> DeleteRegisterAsync(ProductCategoryDeleteRequest dtoDelete, UserCredential userCredential)
     {
         if (dtoDelete.Id == 0)
         {
@@ -141,6 +150,11 @@ public class ProductCategoryCommandService(
         
         if(!await EntityValidationAsync(productCategory))  return false;
         
-        return await productCategoryRepository.DeleteAsync(productCategory);
+        var result = await productCategoryRepository.DeleteAsync(productCategory);
+        if (result)
+        {
+            GenerateLogger(ProductCategoryTrace.Delete, userCredential.Id, productCategory.Id.ToString());
+        }
+        return result;
     }
 }

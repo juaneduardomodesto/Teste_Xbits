@@ -16,11 +16,10 @@ public class ProductCategoryRepository(
     : RepositoryBase<ProductCategory>(dbContext), IProductCategoryRepository
 {
 
-    public async Task<ProductCategory> SaveAsync(ProductCategory dtoRegister)
+    public async Task<bool> SaveAsync(ProductCategory dtoRegister)
     {
         await DbSetContext.AddAsync(dtoRegister);
-        await SaveInDatabaseAsync();
-        return dtoRegister;
+        return await SaveInDatabaseAsync();
     }
 
     public Task<bool> DeleteAsync(ProductCategory dtoupdate)

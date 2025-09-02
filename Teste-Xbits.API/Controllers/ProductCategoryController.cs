@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Teste_Xbits.API.Extensions;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Request.ProductCategoryRequest;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Response.ProductCategoryResponse;
 using Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
@@ -20,7 +21,7 @@ public class ProductCategoryController(
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<bool> RegisterProductCategory([FromBody] ProductCategoryRegisterRequest dtoRegister) =>
-        productCategoryCommandService.RegisterAsync(dtoRegister);
+        productCategoryCommandService.RegisterAsync(dtoRegister, User.GetUserCredential());
     
     [Authorize]
     [HttpPut("update_product_category")]
@@ -28,7 +29,7 @@ public class ProductCategoryController(
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<bool> UpdateProductCategory([FromBody] ProductCategoryUpdateRequest dtoUpdate) =>
-        productCategoryCommandService.UpdateRegisterAsync(dtoUpdate);
+        productCategoryCommandService.UpdateRegisterAsync(dtoUpdate, User.GetUserCredential());
     
     [Authorize]
     [HttpDelete("delete_product_category")]
@@ -36,7 +37,7 @@ public class ProductCategoryController(
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<bool> DeleteProductCategory([FromBody] ProductCategoryDeleteRequest dtoDelete) =>
-        productCategoryCommandService.DeleteRegisterAsync(dtoDelete);
+        productCategoryCommandService.DeleteRegisterAsync(dtoDelete, User.GetUserCredential());
     
     [Authorize]
     [HttpGet("get_by_id")]
