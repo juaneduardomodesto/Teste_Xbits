@@ -22,7 +22,7 @@ public class ProductCommandService(
     private readonly INotificationHandler _notificationHandler = notification;
     private readonly ILoggerHandler _loggerHandler = logger;
 
-    public async Task<bool> RegisterProductAsync(ProductRegisterRequest dtoRegister)
+    public async Task<bool> RegisterProductAsync(ProductRegisterRequest dtoRegister, UserCredential userCredential)
     {
         #region validation
         
@@ -95,11 +95,15 @@ public class ProductCommandService(
         var mappedProduct = productMapper.DtoRegisterToDomain(dtoRegister);
         if (!await EntityValidationAsync(mappedProduct)) return false;
 
-        _ = await productRepository.SaveAsync(mappedProduct);
+        var result = await productRepository.SaveAsync(mappedProduct);
+        if (result)
+        {
+            GenerateLogger(ProductTrace.Save, userCredential.Id, mappedProduct.Id.ToString());
+        }
         return true;
     }
 
-    public async Task<bool> UpdateProductAsync(ProductUpdateRequest dtoUpdate)
+    public async Task<bool> UpdateProductAsync(ProductUpdateRequest dtoUpdate, UserCredential userCredential)
 {
     #region Validation
     
@@ -189,10 +193,15 @@ public class ProductCommandService(
     var updatedProduct = productMapper.DtoUpdateToDomain(dtoUpdate, product.Id);
     if (!await EntityValidationAsync(updatedProduct)) return false;
 
-    return await productRepository.UpdateAsync(updatedProduct);
+    var result = await productRepository.UpdateAsync(updatedProduct);
+    if (result)
+    {
+        GenerateLogger(ProductTrace.Update, userCredential.Id, updatedProduct.Id.ToString());
+    }
+    return result;
 }
 
-    public async Task<bool> DeleteProductAsync(ProductDeleteRequest dtoDelete)
+    public async Task<bool> DeleteProductAsync(ProductDeleteRequest dtoDelete, UserCredential userCredential)
     {
         #region Validation
 
@@ -215,8 +224,11 @@ public class ProductCommandService(
             return false;
         }
 
-        if (!await EntityValidationAsync(product)) return false;
-
-        return await productRepository.DeleteAsync(product);
+        var result = await productRepository.DeleteAsync(product);
+        if (result)
+        {
+            GenerateLogger(ProductTrace.Delete, userCredential.Id, product.Id.ToString());
+        }
+        return result;
     }
 }

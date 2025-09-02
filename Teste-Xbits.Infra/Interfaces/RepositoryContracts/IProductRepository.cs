@@ -7,7 +7,7 @@ namespace Teste_Xbits.Infra.Interfaces.RepositoryContracts;
 
 public interface IProductRepository
 {
-    Task<Product> SaveAsync(Product product);
+    Task<bool> SaveAsync(Product product);
     Task<bool> DeleteAsync(Product product);
     Task<bool> UpdateAsync(Product product);
     public Task<Product?> FindByPredicateAsync(
