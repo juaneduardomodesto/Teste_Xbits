@@ -37,7 +37,7 @@ public class LoginQueryServiceUnitTest : LoginQueryServiceSetup
             .ReturnsAsync(user);
     
         TokenCommandService
-            .Setup(x => x.Authentication(
+            .Setup(x => x.AuthenticationAsync(
                 It.IsAny<LoginRequest>(), 
                 It.IsAny<Guid>(), 
                 It.IsAny<ERoles>()))
@@ -59,7 +59,7 @@ public class LoginQueryServiceUnitTest : LoginQueryServiceSetup
             It.IsAny<Func<IQueryable<User>, IQueryable<User>>?>(),
             It.IsAny<bool>()), Times.Once);
     
-        TokenCommandService.Verify(x => x.Authentication(
+        TokenCommandService.Verify(x => x.AuthenticationAsync(
                 dtoLogin, 
                 It.IsAny<Guid>(), 
                 user.Role),
@@ -96,7 +96,7 @@ public class LoginQueryServiceUnitTest : LoginQueryServiceSetup
             LoginTrace.Login,
             EMessage.InvalidCredentials.GetDescription()), Times.Once);
     
-        TokenCommandService.Verify(x => x.Authentication(
+        TokenCommandService.Verify(x => x.AuthenticationAsync(
             It.IsAny<LoginRequest>(),
             It.IsAny<Guid>(),
             It.IsAny<ERoles>()), Times.Never);
@@ -187,7 +187,7 @@ public class LoginQueryServiceUnitTest : LoginQueryServiceSetup
             .ReturnsAsync(user);
 
         TokenCommandService
-            .Setup(x => x.Authentication(
+            .Setup(x => x.AuthenticationAsync(
                 It.IsAny<LoginRequest>(), 
                 It.IsAny<Guid>(), 
                 It.IsAny<ERoles>()))

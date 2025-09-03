@@ -23,7 +23,7 @@ public class TokenCommandCommandService(
     : ServiceBase<Token>(notification, validate, logger), ITokenCommandService
 {
 
-    public async Task<TokenResponse?> Authentication(LoginRequest dtoLogin, Guid userGuid, ERoles role)
+    public async Task<TokenResponse?> AuthenticationAsync(LoginRequest dtoLogin, Guid userGuid, ERoles role)
     {
         await Task.CompletedTask;
         
