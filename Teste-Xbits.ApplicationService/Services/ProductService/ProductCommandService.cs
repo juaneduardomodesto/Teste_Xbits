@@ -99,7 +99,7 @@ public class ProductCommandService(
         {
             GenerateLogger(ProductTrace.Save, userCredential.Id, mappedProduct.Id.ToString());
         }
-        return true;
+        return result;
     }
 
     public async Task<bool> UpdateProductAsync(ProductUpdateRequest dtoUpdate, UserCredential userCredential)
