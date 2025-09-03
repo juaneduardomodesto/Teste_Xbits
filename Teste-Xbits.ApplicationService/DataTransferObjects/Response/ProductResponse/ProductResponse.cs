@@ -8,7 +8,7 @@ public class ProductResponse
     public decimal Price { get; init; }
     public required string Code { get; init; }
     public bool HasValidadeDate { get; init; }
-    public DateTime? ValidadeDate { get; init; }
+    public DateTime? ExpirationDate { get; init; }
     public long? ProductCategoryId { get; init; }
     public ProductCategoryResponse.ProductCategoryResponse? ProductCategory { get; init; }
 }
