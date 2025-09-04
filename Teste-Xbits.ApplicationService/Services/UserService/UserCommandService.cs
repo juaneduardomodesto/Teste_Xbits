@@ -83,7 +83,7 @@ public class UserCommandService(
         {
             GenerateLogger(UserTracer.Save, userId, mappedUser.Id.ToString());
         }
-        return true;
+        return result;
     }
 
     public async Task<bool> UpdateUserAsync(UserUpdateRequest dtoUpdate, UserCredential  userCredential)
