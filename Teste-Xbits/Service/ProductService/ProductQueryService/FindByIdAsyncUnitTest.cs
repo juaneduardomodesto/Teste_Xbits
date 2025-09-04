@@ -10,7 +10,7 @@ public class FindByIdAsyncUnitTest : ProductQueryServiceSetup
 {
     [Fact]
     [Trait("Query", "Perfect setting")]
-    public async Task FindById_PerfectSetting_ReturnProduct()
+    public async Task FindById_ValidProduct_ReturnProduct()
     {
         var productId = 1L;
 
