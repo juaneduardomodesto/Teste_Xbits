@@ -67,7 +67,7 @@ public class ProductCategoryCommandService(
         {
             GenerateLogger(ProductCategoryTrace.Save, userCredential.Id, mappedProdCategory.Id.ToString());
         }
-        return true;
+        return result;
     }
 
     public async Task<bool> UpdateRegisterAsync(ProductCategoryUpdateRequest dtoUpdate, UserCredential userCredential)
