@@ -38,7 +38,7 @@ public class ProductCategoryMapper : IProductCategoryMapper
             ProductCategoryCode = productCategory.ProductCategoryCode
         };
     
-    public PageList<ProductCategoryResponse> DomainToPaginationUserResponse(PageList<ProductCategory> userPageList)
+    public PageList<ProductCategoryResponse> DomainToPaginationResponse(PageList<ProductCategory> userPageList)
     {
         var responses = userPageList.Items.Select(DomainToSimpleResponse).ToList();
         

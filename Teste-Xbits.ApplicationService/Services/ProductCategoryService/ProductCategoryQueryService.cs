@@ -60,7 +60,7 @@ public class ProductCategoryQueryService(
 
             return !productCategoryList.Items.Any()
                 ? new PageList<ProductCategoryResponse>()
-                : productCategoryMapper.DomainToPaginationUserResponse(productCategoryList);
+                : productCategoryMapper.DomainToPaginationResponse(productCategoryList);
         }
         catch (Exception ex)
         {

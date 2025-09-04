@@ -34,8 +34,7 @@ namespace Teste_Xbits.Service.ProductCategoryService.ProductCategoryCommandServi
             { 
                 { "Error", "Validation failed" } 
             });
-
-            // Setup default validation response
+            
             Validator.Setup(x => x.ValidationAsync(It.IsAny<ProductCategory>()))
                      .ReturnsAsync(ValidationResponse);
 
