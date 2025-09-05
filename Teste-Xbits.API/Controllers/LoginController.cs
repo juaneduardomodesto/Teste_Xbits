@@ -13,9 +13,11 @@ public class LoginController(ILoginQueryService loginQueryService) : ControllerB
 {
     [AllowAnonymous]
     [HttpPost("login")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponse))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
     public Task<LoginResponse?> Login([FromBody] LoginRequest registerRequest) =>
         loginQueryService.LoginAsync(registerRequest);

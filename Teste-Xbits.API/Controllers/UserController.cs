@@ -18,10 +18,13 @@ public class UserController(
 {
     [Authorize(Policy = "AdminOnly")]
     [HttpPost("register_user")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<bool> RegisterUser([FromBody] UserRegisterRequest dtoRegister) =>
         userCommandService.RegisterUserAsync(dtoRegister, User.GetUserId(), false);
     
@@ -29,35 +32,45 @@ public class UserController(
     [HttpPut("update_user")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<bool> UpdateUser([FromBody] UserUpdateRequest dtoUpdate) =>
         userCommandService.UpdateUserAsync(dtoUpdate, User.GetUserCredential());
     
     [Authorize(Policy = "AdminOnly")]
-    [HttpDelete("delete_user")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [HttpDelete("delete_user/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<bool> DeleteUser([FromBody] UserDeleteRequest dtoDelete) =>
         userCommandService.DeleteUserAsync(dtoDelete, User.GetUserCredential());
 
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("get_by_id")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<UserResponse?> FindById([FromQuery] long userId) =>
         userQueryService.FindByIdAsync(userId);
     
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("list_users_paginated")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PageList<UserResponse>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<PageList<UserResponse>> GetUsersPaginatedAsync(
         [FromQuery] string? namePrefix,
         [FromQuery] string? emailPrefix,

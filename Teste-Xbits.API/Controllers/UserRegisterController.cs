@@ -12,10 +12,11 @@ public class UserRegisterController(IUserCommandFacadeService userCommandFacadeS
 {
     [AllowAnonymous]
     [HttpPost("register_user")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(IEnumerable<DomainNotification>))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(IEnumerable<DomainNotification>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<bool> RegisterUser([FromBody] UserRegisterRequest dtoRegister) =>
         userCommandFacadeService.RegisterUserAsync(dtoRegister, Guid.Empty, true);
 }
