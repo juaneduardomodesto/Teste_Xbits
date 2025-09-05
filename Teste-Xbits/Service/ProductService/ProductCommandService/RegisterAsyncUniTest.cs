@@ -16,11 +16,7 @@ public class RegisterAsyncUniTest : ProductCommandServiceSetup
     public async Task RegisterAsync_ValidProduct_ReturnTrue()
     {
         var dtoRegister = CreateValidProductCreateRequest();
-        var userCredential = new UserCredential 
-        { 
-            Id = Guid.NewGuid(), 
-            Roles = [nameof(ERoles.Administrator)]
-        };
+        var userCredential = CreateUserCredential();
         var product = CreateValidProduct();
         
         ProductRepository

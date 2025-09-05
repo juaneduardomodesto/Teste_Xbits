@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Linq.Expressions;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Request.UserRegister;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
@@ -30,7 +31,7 @@ public class UserCommandServiceSetup
         UserRepository = new Mock<IUserRepository>();
         UserMapper = new Mock<IUserMapper>();
         Configuration = new Mock<IConfiguration>();
-        
+
         Errors = [];
         ValidationResponse = ValidationResponse.CreateResponse(Errors);
 
@@ -42,9 +43,9 @@ public class UserCommandServiceSetup
             UserRepository.Object
         );
     }
-    
+
     protected void CreateNotification() => Errors.Add("Error", "Error");
-    
+
     protected User CreateValidUser()
     {
         return new User
@@ -62,7 +63,7 @@ public class UserCommandServiceSetup
             UpdatedAt = DateTime.Now
         };
     }
-    
+
     protected User CreateInvalidUser()
     {
         return new User
@@ -80,8 +81,8 @@ public class UserCommandServiceSetup
             UpdatedAt = DateTime.Now
         };
     }
-    
-    protected UserRegisterRequest CreateValidUserRegisterRequest() => 
+
+    protected UserRegisterRequest CreateValidUserRegisterRequest() =>
         new()
         {
             Name = "Test User",
@@ -94,8 +95,8 @@ public class UserCommandServiceSetup
             Cpf = "13193568937",
             IsActive = true
         };
-    
-    protected UserRegisterRequest CreateInvalidUserRegisterRequest() => 
+
+    protected UserRegisterRequest CreateInvalidUserRegisterRequest() =>
         new()
         {
             Name = "invalide user",
@@ -125,7 +126,7 @@ public class UserCommandServiceSetup
             IsActive = true
         };
     }
-    
+
     protected UserUpdateRequest CreateInvalidUserUpdateRequest()
     {
         return new UserUpdateRequest
@@ -150,7 +151,7 @@ public class UserCommandServiceSetup
             Id = 1L
         };
     }
-    
+
     protected UserDeleteRequest CreateInvalidUserDeleteRequest()
     {
         return new UserDeleteRequest()
@@ -166,5 +167,61 @@ public class UserCommandServiceSetup
             Id = Guid.NewGuid(),
             Roles = []
         };
+    }
+
+    protected void SetupUserRepositoryFindByPredicateAsync(User user)
+    {
+        UserRepository
+            .Setup(x => x.FindByPredicateAsync(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                null, true))
+            .ReturnsAsync(user);
+    }
+    
+    protected void SetupUserRepositoryFindByPredicateQueryableAsync(User user)
+    {
+        UserRepository
+            .Setup(x => x.FindByPredicateAsync(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
+                It.IsAny<bool>()))
+            .ReturnsAsync(user);
+    }
+    protected void SetupUserMapperDtoUpdateToDomain(UserUpdateRequest userUpdateRequest, long userId, User user)
+    {
+        UserMapper.Setup(x => x.DtoUpdateToDomain(userUpdateRequest, userId)).Returns(user);
+    }
+
+    protected void SetupValidatorValidationAsync()
+    {
+        Validator.Setup(x => x.ValidationAsync(It.IsAny<User>())).ReturnsAsync(ValidationResponse);
+    }
+
+    protected void SetupUserRepositoryUpdateAsync(User user, bool returnValue)
+    {
+        UserRepository.Setup(x => x.UpdateAsync(user)).ReturnsAsync(returnValue);
+    }
+
+    protected void SetupLoggerHandlerCreateLogger()
+    {
+        LoggerHandler.Setup(x => x.CreateLogger(It.IsAny<DomainLogger>()));
+    }
+
+    protected void SetupUserMapperDtoRegisterToDomain(UserRegisterRequest dtoRegister, User user)
+    {
+        UserMapper.Setup(x => x.DtoRegisterToDomain(dtoRegister))
+            .Returns(user);
+    }
+
+    protected void SetupUserRepositorySaveAsync(User user, bool returnValue)
+    {
+        UserRepository.Setup(x => x.SaveAsync(user))
+            .ReturnsAsync(returnValue);    
+    }
+
+    protected void SetupUserRepositoryDeleteAsync(User user, bool returnValue)
+    {
+        UserRepository.Setup(x => x.DeleteAsync(user))
+            .ReturnsAsync(returnValue);
     }
 }

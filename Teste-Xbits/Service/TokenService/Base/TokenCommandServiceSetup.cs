@@ -56,4 +56,14 @@ public class TokenCommandServiceSetup
         UserIdentifier = "test@example.com",
         ExpireIn = 1800
     };
+
+    protected void SetupTokenMapperMapToTokenResponse(TokenResponse tokenResponse)
+    {
+        TokenMapper
+            .Setup(x => x.MapToTokenResponse(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<int>()))
+            .Returns(tokenResponse);
+    }
 }

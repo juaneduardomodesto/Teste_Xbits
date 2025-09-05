@@ -15,27 +15,24 @@ public class RegisterAsyncUniTest : ProductCategoryCommandServiceSetup
     {
         var productCategory = CreateValidProductCategory();
         var productCategoryRequest = CreateValidProductCategoryRegisterRequest();
-        var userCredential = new UserCredential 
-        { 
-            Id = Guid.NewGuid(), 
-            Roles = [nameof(ERoles.Administrator)]
-        };
+        var userCredential = CreateUserCredential();
         
-        ProductCategoryMapper.Setup(
-                x => x.DtoRegisterToDomain(productCategoryRequest))
-            .Returns(productCategory);
-        Validator.Setup(x => x.ValidationAsync(It.IsAny<ProductCategory>()))
-            .ReturnsAsync(ValidationResponse);
-        ProductCategoryRepository.Setup(x => x.SaveAsync(productCategory))
-            .ReturnsAsync(true);
-        LoggerHandler.Setup(x => x.CreateLogger(It.IsAny<DomainLogger>()));
+        SetupProductCategoryMapperDtoRegisterToDomain(productCategoryRequest, productCategory);
+        SetupValidatorValidationAsync();
+        SetupProductCategoryRepositorySaveAsync(productCategory, true);
+        SetupLoggerHandlerCreateLogger();
 
         var result = await ProductCategoryCommandService.RegisterAsync(productCategoryRequest, userCredential);
         
-        ProductCategoryMapper.Verify(x => x.DtoRegisterToDomain(productCategoryRequest), Times.Once);
-        Validator.Verify(x => x.ValidationAsync(It.IsAny<ProductCategory>()), Times.Once);
-        ProductCategoryRepository.Verify(x => x.SaveAsync(productCategory), Times.Once);
-        LoggerHandler.Verify(x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Once);
+        Assert.True(result);
+        ProductCategoryMapper.Verify(
+            x => x.DtoRegisterToDomain(productCategoryRequest), Times.Once);
+        Validator.Verify(
+            x => x.ValidationAsync(It.IsAny<ProductCategory>()), Times.Once);
+        ProductCategoryRepository.Verify(
+            x => x.SaveAsync(productCategory), Times.Once);
+        LoggerHandler.Verify(
+            x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Once);
     }
     
     [Fact]
@@ -44,25 +41,24 @@ public class RegisterAsyncUniTest : ProductCategoryCommandServiceSetup
     {
         var productCategory = CreateValidProductCategory();
         var productCategoryRequest = CreateValidProductCategoryRegisterRequest();
-        var userCredential = new UserCredential 
-        { 
-            Id = Guid.NewGuid(), 
-            Roles = [nameof(ERoles.Administrator)]
-        };
+        var userCredential = CreateUserCredential();
         
         CreateNotification();
-        ProductCategoryMapper.Setup(
-                x => x.DtoRegisterToDomain(productCategoryRequest))
-            .Returns(productCategory);
-        Validator.Setup(x => x.ValidationAsync(It.IsAny<ProductCategory>()))
-            .ReturnsAsync(ValidationResponse);
+        SetupProductCategoryMapperDtoRegisterToDomain(productCategoryRequest, productCategory);
+        SetupValidatorValidationAsync();
+        SetupValidatorValidationAsync();
 
         var result = await ProductCategoryCommandService.RegisterAsync(productCategoryRequest, userCredential);
         
-        ProductCategoryMapper.Verify(x => x.DtoRegisterToDomain(productCategoryRequest), Times.Once);
-        Validator.Verify(x => x.ValidationAsync(It.IsAny<ProductCategory>()), Times.Once);
-        ProductCategoryRepository.Verify(x => x.SaveAsync(productCategory), Times.Never);
-        LoggerHandler.Verify(x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Never);
+        Assert.False(result);
+        ProductCategoryMapper.Verify(
+            x => x.DtoRegisterToDomain(productCategoryRequest), Times.Once);
+        Validator.Verify(
+            x => x.ValidationAsync(It.IsAny<ProductCategory>()), Times.Once);
+        ProductCategoryRepository.Verify(
+            x => x.SaveAsync(productCategory), Times.Never);
+        LoggerHandler.Verify(
+            x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Never);
     }
     
     [Fact]
@@ -71,26 +67,23 @@ public class RegisterAsyncUniTest : ProductCategoryCommandServiceSetup
     {
         var productCategory = CreateValidProductCategory();
         var productCategoryRequest = CreateValidProductCategoryRegisterRequest();
-        var userCredential = new UserCredential 
-        { 
-            Id = Guid.NewGuid(), 
-            Roles = [nameof(ERoles.Administrator)]
-        };
+        var userCredential = CreateUserCredential();
         
-        ProductCategoryMapper.Setup(
-                x => x.DtoRegisterToDomain(productCategoryRequest))
-            .Returns(productCategory);
-        Validator.Setup(x => x.ValidationAsync(It.IsAny<ProductCategory>()))
-            .ReturnsAsync(ValidationResponse);
-        ProductCategoryRepository.Setup(x => x.SaveAsync(productCategory))
-            .ReturnsAsync(false);
-        LoggerHandler.Setup(x => x.CreateLogger(It.IsAny<DomainLogger>()));
+        SetupProductCategoryMapperDtoRegisterToDomain(productCategoryRequest, productCategory);
+        SetupValidatorValidationAsync();
+        SetupProductCategoryRepositorySaveAsync(productCategory, false);
+        SetupLoggerHandlerCreateLogger();
 
         var result = await ProductCategoryCommandService.RegisterAsync(productCategoryRequest, userCredential);
         
-        ProductCategoryMapper.Verify(x => x.DtoRegisterToDomain(productCategoryRequest), Times.Once);
-        Validator.Verify(x => x.ValidationAsync(It.IsAny<ProductCategory>()), Times.Once);
-        ProductCategoryRepository.Verify(x => x.SaveAsync(productCategory), Times.Once);
-        LoggerHandler.Verify(x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Never);
+        Assert.False(result);
+        ProductCategoryMapper.Verify(
+            x => x.DtoRegisterToDomain(productCategoryRequest), Times.Once);
+        Validator.Verify(
+            x => x.ValidationAsync(It.IsAny<ProductCategory>()), Times.Once);
+        ProductCategoryRepository.Verify(
+            x => x.SaveAsync(productCategory), Times.Once);
+        LoggerHandler.Verify(
+            x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Never);
     }
 }

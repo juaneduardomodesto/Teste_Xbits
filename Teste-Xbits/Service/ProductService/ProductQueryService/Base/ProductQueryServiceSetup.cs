@@ -133,6 +133,23 @@ public class ProductQueryServiceSetup
             .Setup(x => x.DomainToPaginationResponse(It.IsAny<PageList<Product>>()))
             .Returns(response);
     }
+    
+    protected void SetupProductRepositoryFindByPredicateAsync(Product product)
+    {
+        ProductRepository
+            .Setup(r => r.FindByPredicateAsync(
+                It.IsAny<Expression<Func<Product, bool>>>(),
+                It.IsAny<Func<IQueryable<Product>, IQueryable<Product>>?>(),
+                It.IsAny<bool>()))
+            .ReturnsAsync(product);
+    }
+
+    protected void SetupProductMapperDomainToSimpleResponse(ProductResponse response)
+    {
+        ProductMapper
+            .Setup(m => m.DomainToSimpleResponse(It.IsAny<Product>()))
+            .Returns(response);
+    }
 
     protected (string? namePrefix, string? descriptionPrefix, decimal? pricePrefix,
         string? productCodePrefix, bool? hasValidadeDatePrefix, string? expirationDate,

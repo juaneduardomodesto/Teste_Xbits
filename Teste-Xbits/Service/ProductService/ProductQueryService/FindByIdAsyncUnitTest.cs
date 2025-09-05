@@ -12,57 +12,44 @@ public class FindByIdAsyncUnitTest : ProductQueryServiceSetup
     [Trait("Query", "Perfect setting")]
     public async Task FindById_ValidProduct_ReturnProduct()
     {
-        var productId = 1L;
-
+        const long productId = 1L;
         var product = CreateValidProduct();
         var productResponse = CreateValidProductResponse();
         
-        ProductRepository
-            .Setup(r => r.FindByPredicateAsync(
-                It.IsAny<Expression<Func<Product, bool>>>(),
-                It.IsAny<Func<IQueryable<Product>, IQueryable<Product>>?>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync(product);
-        
-        ProductMapper
-            .Setup(m => m.DomainToSimpleResponse(It.IsAny<Product>()))
-            .Returns(productResponse);
+        SetupProductRepositoryFindByPredicateAsync(product);
+        SetupProductMapperDomainToSimpleResponse(productResponse);
         
         var result = await ProductQueryService.FindByIdAsync(productId);
         
         Assert.NotNull(result);
-        
-        ProductRepository.Verify(r => r.FindByPredicateAsync(
+        ProductRepository.Verify(
+            r => r.FindByPredicateAsync(
             It.IsAny<Expression<Func<Product, bool>>>(),
             It.IsAny<Func<IQueryable<Product>, IQueryable<Product>>?>(),
             It.IsAny<bool>()), Times.Once);
         
-        ProductMapper.Verify(m => m.DomainToSimpleResponse(It.IsAny<Product>()), Times.Once);
+        ProductMapper.Verify(
+            m => m.DomainToSimpleResponse(It.IsAny<Product>()), Times.Once);
     }
     
     [Fact]
     [Trait("Query", "Invalid Product")]
     public async Task FindById_InvalidProduct_ReturnsNull()
     {
-        var productId = 999L;
+        const long productId = 999L;
+        Product? product = null;
 
-        ProductRepository
-            .Setup(r => r.FindByPredicateAsync(
-                It.IsAny<Expression<Func<Product, bool>>>(),
-                It.IsAny<Func<IQueryable<Product>, IQueryable<Product>>?>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync((Product?)null);
+        SetupProductRepositoryFindByPredicateAsync(product!);
         
         var result = await ProductQueryService.FindByIdAsync(productId);
         
         Assert.Null(result);
-
-        ProductRepository.Verify(r => r.FindByPredicateAsync(
+        ProductRepository.Verify(
+            r => r.FindByPredicateAsync(
             It.IsAny<Expression<Func<Product, bool>>>(),
             It.IsAny<Func<IQueryable<Product>, IQueryable<Product>>?>(),
             It.IsAny<bool>()), Times.Once);
-
-        ProductMapper.Verify(m => m.DomainToSimpleResponse(It.IsAny<Product>()), Times.Never);
+        ProductMapper.Verify(
+            m => m.DomainToSimpleResponse(It.IsAny<Product>()), Times.Never);
     }
-
 }

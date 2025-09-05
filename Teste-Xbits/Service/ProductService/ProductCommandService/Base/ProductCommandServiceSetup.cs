@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Linq.Expressions;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Request.ProductRequest;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
@@ -143,5 +144,76 @@ public class ProductCommandServiceSetup
         {
             ProductId = 0L
         };
+    }
+    
+    protected UserCredential CreateUserCredential() => new UserCredential 
+    { 
+        Id = Guid.NewGuid(), 
+        Roles = [] 
+    };
+
+    protected void SetupProductRepositoryFindByPredicateAsync(ProductDeleteRequest dtoDelete, Product existingProduct,
+        bool tracking = false)
+    {
+        ProductRepository
+            .Setup(x => x.FindByPredicateAsync(
+                x => x.Id == dtoDelete.ProductId, null, tracking))
+            .ReturnsAsync(existingProduct);
+    }
+    
+    protected void SetupProductRepositoryFindByPredicateAsync(ProductUpdateRequest dtoDelete, Product existingProduct,
+        bool tracking = false)
+    {
+        ProductRepository
+            .Setup(x => x.FindByPredicateAsync(
+                x => x.Id == dtoDelete.ProductId, null, tracking))
+            .ReturnsAsync(existingProduct);
+    }
+
+    protected void SetupProductRepositoryDeleteAsync(Product existingProduct, bool returnValue)
+    {
+        ProductRepository
+            .Setup(x => x.DeleteAsync(existingProduct))
+            .ReturnsAsync(returnValue);
+    }
+
+    protected void SetupProductRepositoryFindByPredicateAsyncPreExist()
+    {
+        ProductRepository
+            .Setup(x => x.FindByPredicateAsync(
+                It.IsAny<Expression<Func<Product, bool>>>(), 
+                null, false))
+            .ReturnsAsync((Product)null!);
+    }
+
+    protected void SetupProductMapperDtoUpdateToDomain(ProductUpdateRequest dtoUpdate, Product existingProduct, 
+        Product updatedProduct)
+    {
+        ProductMapper
+            .Setup(x => x.DtoUpdateToDomain(dtoUpdate, existingProduct.Id))
+            .Returns(updatedProduct);
+    }
+
+    protected void SetupValidationAsync(Product updatedProduct)
+    {
+        Validator
+            .Setup(x => x.ValidationAsync(updatedProduct))
+            .ReturnsAsync(ValidationResponse);
+    }
+
+    protected void SetupProductRepositoryUpdateAsync(Product updatedProduct, bool returnValue)
+    {
+        ProductRepository
+            .Setup(x => x.UpdateAsync(updatedProduct))
+            .ReturnsAsync(returnValue);
+    }
+
+    protected void SetupCategoryRepositoryFindByPredicateAsync()
+    {
+        CategoryRepository
+            .Setup(x => x.FindByPredicateAsync(
+                It.IsAny<Expression<Func<ProductCategory, bool>>>(), 
+                null, false))
+            .ReturnsAsync((ProductCategory)null!);
     }
 }

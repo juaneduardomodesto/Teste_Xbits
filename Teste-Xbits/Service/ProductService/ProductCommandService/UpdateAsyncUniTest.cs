@@ -23,40 +23,29 @@ public class UpdateAsyncUniTest : ProductCommandServiceSetup
         var existingProduct = CreateValidProduct();
         var updatedProduct = CreateValidProduct();
 
-        ProductRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<System.Linq.Expressions.Expression<Func<Product, bool>>>(), 
-                null, false))
-            .ReturnsAsync((Product)null!);
-
-        ProductRepository
-            .Setup(x => x.FindByPredicateAsync(
-                x => x.Id == dtoUpdate.ProductId, null, true))
-            .ReturnsAsync(existingProduct);
-
-        ProductMapper
-            .Setup(x => x.DtoUpdateToDomain(dtoUpdate, existingProduct.Id))
-            .Returns(updatedProduct);
-
-        Validator
-            .Setup(x => x.ValidationAsync(updatedProduct))
-            .ReturnsAsync(ValidationResponse);
-
-        ProductRepository
-            .Setup(x => x.UpdateAsync(updatedProduct))
-            .ReturnsAsync(true);
+        SetupProductRepositoryFindByPredicateAsyncPreExist();
+        SetupProductRepositoryFindByPredicateAsync(dtoUpdate, existingProduct, true);
+        SetupProductMapperDtoUpdateToDomain(dtoUpdate, existingProduct, updatedProduct);
+        SetupValidationAsync(updatedProduct);
+        SetupProductRepositoryUpdateAsync(updatedProduct, true);
         
         var result = await ProductCommandService.UpdateProductAsync(dtoUpdate, userCredential);
         
         Assert.True(result);
-        ProductRepository.Verify(x => x.FindByPredicateAsync(
+        ProductRepository.Verify(
+            x => x.FindByPredicateAsync(
             It.IsAny<System.Linq.Expressions.Expression<Func<Product, bool>>>(), null, false), Times.AtLeastOnce);
-        ProductRepository.Verify(x => x.FindByPredicateAsync(
+        ProductRepository.Verify(
+            x => x.FindByPredicateAsync(
             x => x.Id == dtoUpdate.ProductId, null, true), Times.Once);
-        ProductMapper.Verify(x => x.DtoUpdateToDomain(dtoUpdate, existingProduct.Id), Times.Once);
-        Validator.Verify(x => x.ValidationAsync(updatedProduct), Times.Once);
-        ProductRepository.Verify(x => x.UpdateAsync(updatedProduct), Times.Once);
-        LoggerHandler.Verify(x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Once);
+        ProductMapper.Verify(
+            x => x.DtoUpdateToDomain(dtoUpdate, existingProduct.Id), Times.Once);
+        Validator.Verify(
+            x => x.ValidationAsync(updatedProduct), Times.Once);
+        ProductRepository.Verify(
+            x => x.UpdateAsync(updatedProduct), Times.Once);
+        LoggerHandler.Verify(
+            x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Once);
     }
     
     [Fact]
@@ -70,18 +59,9 @@ public class UpdateAsyncUniTest : ProductCommandServiceSetup
             Roles = [nameof(ERoles.Administrator)]
         };
 
-        CreateNotification();
-        ProductRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<System.Linq.Expressions.Expression<Func<Product, bool>>>(), 
-                null, false))
-            .ReturnsAsync((Product)null!);
-
-        CategoryRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<System.Linq.Expressions.Expression<Func<ProductCategory, bool>>>(), 
-                null, false))
-            .ReturnsAsync((ProductCategory)null!);
+        CreateNotification();        
+        SetupProductRepositoryFindByPredicateAsyncPreExist();
+        SetupCategoryRepositoryFindByPredicateAsync();
 
         var result = await ProductCommandService.UpdateProductAsync(dtoUpdate, userCredential);
         
@@ -96,6 +76,37 @@ public class UpdateAsyncUniTest : ProductCommandServiceSetup
     [Trait("Command", "Update Fail")]
     public async Task UpdateAsync_UpdateFail_ReturnFalse()
     {
+        var dtoUpdate = CreateValidProductUpdateRequest();
+        var userCredential = new UserCredential 
+        { 
+            Id = Guid.NewGuid(), 
+            Roles = [nameof(ERoles.Administrator)]
+        };
+        var existingProduct = CreateValidProduct();
+        var updatedProduct = CreateValidProduct();
 
+        SetupProductRepositoryFindByPredicateAsyncPreExist();
+        SetupProductRepositoryFindByPredicateAsync(dtoUpdate, existingProduct, true);
+        SetupProductMapperDtoUpdateToDomain(dtoUpdate, existingProduct, updatedProduct);
+        SetupValidationAsync(updatedProduct);
+        SetupProductRepositoryUpdateAsync(updatedProduct, false);
+        
+        var result = await ProductCommandService.UpdateProductAsync(dtoUpdate, userCredential);
+        
+        Assert.False(result);
+        ProductRepository.Verify(
+            x => x.FindByPredicateAsync(
+                It.IsAny<System.Linq.Expressions.Expression<Func<Product, bool>>>(), null, false), Times.AtLeastOnce);
+        ProductRepository.Verify(
+            x => x.FindByPredicateAsync(
+                x => x.Id == dtoUpdate.ProductId, null, true), Times.Once);
+        ProductMapper.Verify(
+            x => x.DtoUpdateToDomain(dtoUpdate, existingProduct.Id), Times.Once);
+        Validator.Verify(
+            x => x.ValidationAsync(updatedProduct), Times.Once);
+        ProductRepository.Verify(
+            x => x.UpdateAsync(updatedProduct), Times.Once);
+        LoggerHandler.Verify(
+            x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Never);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Linq.Expressions;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Request.LoginRequest;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Response.LoginResponse;
@@ -110,5 +111,42 @@ public class LoginQueryServiceSetup
             ExpireIn = 1000000,
             UserIdentifier = "identificador@gmail.com"
         };
+    }
+
+    protected void SetupUserRepositoryFindByPredicateAsync(User user)
+    {
+        UserRepository
+            .Setup(x => x.FindByPredicateAsync(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IQueryable<User>>?>(),
+                It.IsAny<bool>()))
+            .ReturnsAsync(user);
+    }
+
+    protected void SetupTokenCommandServiceAuthenticationAsync(TokenResponse tokenResponse)
+    {
+        TokenCommandService
+            .Setup(x => x.AuthenticationAsync(
+                It.IsAny<LoginRequest>(), 
+                It.IsAny<Guid>(), 
+                It.IsAny<ERoles>()))
+            .ReturnsAsync(tokenResponse);
+    }
+
+    protected void SetupLoginMapperDtoToLoginResponse(LoginResponse loginResponse)
+    {
+        LoginMapper
+            .Setup(x => x.DtoToLoginResponse(It.IsAny<LoginRequest>(), It.IsAny<TokenResponse>()))
+            .Returns(loginResponse);
+    }
+
+    protected void SetupTokenCommandServiceAuthenticationAsync()
+    {
+        TokenCommandService
+            .Setup(x => x.AuthenticationAsync(
+                It.IsAny<LoginRequest>(), 
+                It.IsAny<Guid>(), 
+                It.IsAny<ERoles>()))
+            .ReturnsAsync((TokenResponse)null!);
     }
 }

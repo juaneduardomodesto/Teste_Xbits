@@ -15,17 +15,9 @@ public class DeleteAsyncUnitTest : UserCommandServiceSetup
         var dtoDelete = CreateUserDeleteRequest();
         var userCredential = new UserCredential { Id = Guid.NewGuid(), Roles = [] };
         
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync(user);
-
-        UserRepository.Setup(x => x.DeleteAsync(user))
-            .ReturnsAsync(true);
-
-        LoggerHandler.Setup(x => x.CreateLogger(It.IsAny<DomainLogger>()));
+        SetupUserRepositoryFindByPredicateQueryableAsync(user);
+        SetupUserRepositoryDeleteAsync(user, true);
+        SetupLoggerHandlerCreateLogger();
     
         var result = await UserCommandService.DeleteUserAsync(dtoDelete, userCredential);
     
@@ -48,12 +40,7 @@ public class DeleteAsyncUnitTest : UserCommandServiceSetup
         var user = CreateValidUser();
         var userCredential = new UserCredential { Id = Guid.NewGuid(), Roles = [] };
 
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync(user);
+        SetupUserRepositoryFindByPredicateQueryableAsync(user);
         
         var result = await UserCommandService.DeleteUserAsync(dtoDelete, userCredential);
         
@@ -76,15 +63,8 @@ public class DeleteAsyncUnitTest : UserCommandServiceSetup
         var dtoDelete = CreateUserDeleteRequest();
         var userCredential = new UserCredential { Id = Guid.NewGuid(), Roles = [] };
 
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync(user);
-
-        UserRepository.Setup(x => x.DeleteAsync(user))
-            .ReturnsAsync(false);
+        SetupUserRepositoryFindByPredicateQueryableAsync(user);
+        SetupUserRepositoryDeleteAsync(user, false);
 
         var result = await UserCommandService.DeleteUserAsync(dtoDelete, userCredential);
 

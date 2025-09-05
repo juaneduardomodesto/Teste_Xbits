@@ -32,7 +32,8 @@ public class FindAllWithPaginationAsyncUniTest : ProductQueryServiceSetup
         Assert.NotNull(result);
         Assert.NotEmpty(result.Items);
         
-        ProductRepository.Verify(x => x.FindAllWithPaginationAsync(
+        ProductRepository.Verify(
+            x => x.FindAllWithPaginationAsync(
             It.IsAny<PageParams>(),
             It.IsAny<Expression<Func<Product, bool>>>(),
             It.IsAny<Func<IQueryable<Product>, IIncludableQueryable<Product, object>>>()), Times.Once);
@@ -60,7 +61,8 @@ public class FindAllWithPaginationAsyncUniTest : ProductQueryServiceSetup
         Assert.Empty(result.Items);
         Assert.Equal(0, result.TotalCount);
         
-        ProductMapper.Verify(x => x.DomainToPaginationResponse(It.IsAny<PageList<Product>>()), Times.Never);
+        ProductMapper.Verify(
+            x => x.DomainToPaginationResponse(It.IsAny<PageList<Product>>()), Times.Never);
     }
 
     [Fact]
@@ -86,8 +88,8 @@ public class FindAllWithPaginationAsyncUniTest : ProductQueryServiceSetup
         
         Assert.NotNull(result);
         Assert.NotEmpty(result.Items);
-        
-        ProductRepository.Verify(x => x.FindAllWithPaginationAsync(
+        ProductRepository.Verify(
+            x => x.FindAllWithPaginationAsync(
             It.IsAny<PageParams>(),
             It.IsAny<Expression<Func<Product, bool>>>(),
             It.IsAny<Func<IQueryable<Product>, IIncludableQueryable<Product, object>>>()), Times.Once);

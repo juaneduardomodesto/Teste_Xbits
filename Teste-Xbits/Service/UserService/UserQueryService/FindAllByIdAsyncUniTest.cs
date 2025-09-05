@@ -31,32 +31,22 @@ public class FindAllByIdAsyncUniTest : UserQueryServiceSetup
             IsActive = u.IsActive,
             Role = u.Role,
         }).ToList();
-
+        
         var responsePageList = new PageList<UserResponse>(userResponse, 1, 1, 10);
 
-        UserRepository
-            .Setup(x => x.FindAllWithPaginationAsync(
-                pageParams,
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
-            .ReturnsAsync(domainPageList);
-
-        UserMapper
-            .Setup(x => x.DomainToPaginationUserResponse(domainPageList))
-            .Returns(responsePageList);
+        SetupUserRepositoryFindAllWithPaginationAsync(pageParams, domainPageList);
+        SetupUserMapperDomainToPaginationUserResponse(domainPageList, responsePageList);
         
-        var result = await UserQueryService.FindAllWithPaginationAsync(null, null, null, pageParams);
-
-
+        var result = await UserQueryService.FindAllWithPaginationAsync(
+            null, null, null, pageParams);
+        
         Assert.NotEmpty(result.Items);
         Assert.Equal(1, result.TotalCount);
-    
         UserRepository
             .Verify(x => x.FindAllWithPaginationAsync(
                 pageParams,
                 It.IsAny<Expression<Func<User, bool>>>(),
                 It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()), Times.Once);
-        
         UserMapper
             .Verify(x => x.DomainToPaginationUserResponse(domainPageList), Times.Once);
     }
@@ -69,27 +59,21 @@ public class FindAllByIdAsyncUniTest : UserQueryServiceSetup
         var emptyUsersList = new List<User>();
     
         var domainPageList = new PageList<User>(emptyUsersList, 0, 1, 10);
-
-        UserRepository
-            .Setup(x => x.FindAllWithPaginationAsync(
-                It.IsAny<PageParams>(),
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
-            .ReturnsAsync(domainPageList);
         
-        var result = await UserQueryService.FindAllWithPaginationAsync(null, null, null, pageParams);
+        SetupUserRepositoryFindAllWithPaginationAsync(pageParams, domainPageList);
+        
+        var result = await UserQueryService.FindAllWithPaginationAsync(
+            null, null, null, pageParams);
         
         Assert.NotNull(result);
         Assert.Empty(result.Items);
         Assert.Equal(0, result.TotalCount);
-    
-        UserRepository
-            .Verify(x => x.FindAllWithPaginationAsync(
+        UserRepository.Verify(
+            x => x.FindAllWithPaginationAsync(
                 It.IsAny<PageParams>(),
                 It.IsAny<Expression<Func<User, bool>>>(),
                 It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()), Times.Once);
-        
-        UserMapper
-            .Verify(x => x.DomainToPaginationUserResponse(It.IsAny<PageList<User>>()), Times.Never);
+        UserMapper.Verify(
+            x => x.DomainToPaginationUserResponse(It.IsAny<PageList<User>>()), Times.Never);
     }
 }

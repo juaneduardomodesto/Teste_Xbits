@@ -18,22 +18,19 @@ public class DeleteAsyncUniTest : ProductCommandServiceSetup
         var userCredential = new UserCredential { Id = Guid.NewGuid(), Roles = [nameof(ERoles.Administrator)] };
         var existingProduct = CreateValidProduct();
 
-        ProductRepository
-            .Setup(x => x.FindByPredicateAsync(
-                x => x.Id == dtoDelete.ProductId, null, false))
-            .ReturnsAsync(existingProduct);
-
-        ProductRepository
-            .Setup(x => x.DeleteAsync(existingProduct))
-            .ReturnsAsync(true);
+        SetupProductRepositoryFindByPredicateAsync(dtoDelete, existingProduct);
+        SetupProductRepositoryDeleteAsync(existingProduct, true);
         
         var result = await ProductCommandService.DeleteProductAsync(dtoDelete, userCredential);
         
         Assert.True(result);
-        ProductRepository.Verify(x => x.FindByPredicateAsync(
+        ProductRepository.Verify(
+            x => x.FindByPredicateAsync(
             x => x.Id == dtoDelete.ProductId, null, false), Times.Once);
-        ProductRepository.Verify(x => x.DeleteAsync(existingProduct), Times.Once);
-        LoggerHandler.Verify(x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Once);
+        ProductRepository.Verify(
+            x => x.DeleteAsync(existingProduct), Times.Once);
+        LoggerHandler.Verify(
+            x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Once);
     }
     
     [Fact]
@@ -61,15 +58,9 @@ public class DeleteAsyncUniTest : ProductCommandServiceSetup
         var dtoDelete = CreateProductDeleteRequest();
         var userCredential = new UserCredential { Id = Guid.NewGuid(), Roles = [nameof(ERoles.Administrator)] };
         var existingProduct = CreateValidProduct();
-
-        ProductRepository
-            .Setup(x => x.FindByPredicateAsync(
-                x => x.Id == dtoDelete.ProductId, null, false))
-            .ReturnsAsync(existingProduct);
-
-        ProductRepository
-            .Setup(x => x.DeleteAsync(existingProduct))
-            .ReturnsAsync(false);
+        
+        SetupProductRepositoryFindByPredicateAsync(dtoDelete, existingProduct);
+        SetupProductRepositoryDeleteAsync(existingProduct, false);
         
         var result = await ProductCommandService.DeleteProductAsync(dtoDelete, userCredential);
         

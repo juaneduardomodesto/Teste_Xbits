@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Query;
+using Moq;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Response.UserResponse;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 using Teste_Xbits.Domain.Entities;
@@ -82,5 +84,40 @@ public class UserQueryServiceSetup
             AcceptTermsOfUse = true,
             Role = ERoles.Administrator,
         };
+    }
+
+    protected void SetupUserRepositoryFindByPredicateAsync(User user)
+    {
+        UserRepository
+            .Setup(x => x.FindByPredicateAsync(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IOrderedQueryable<User>>>(),
+                It.IsAny<bool>()))
+            .ReturnsAsync(user);
+    }
+    
+    protected void SetupUserMapperDomainToSimpleResponse(User user, UserResponse userResponse)
+    {
+        UserMapper
+            .Setup(x => x.DomainToSimpleResponse(user))
+            .Returns(userResponse);
+    }
+
+    protected void SetupUserRepositoryFindAllWithPaginationAsync(PageParams pageParams, PageList<User> users)
+    {
+        UserRepository
+            .Setup(x => x.FindAllWithPaginationAsync(
+                pageParams,
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
+            .ReturnsAsync(users);
+    }
+
+    protected void SetupUserMapperDomainToPaginationUserResponse(
+        PageList<User> domainPageList, PageList<UserResponse> userResponse)
+    {
+        UserMapper
+            .Setup(x => x.DomainToPaginationUserResponse(domainPageList))
+            .Returns(userResponse);
     }
 }

@@ -28,24 +28,10 @@ public class LoginQueryServiceUnitTest : LoginQueryServiceSetup
         Assert.NotNull(user);
         Assert.NotNull(user.PasswordHash);
         Assert.Equal(user.PasswordHash, passwordHash);
-    
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IQueryable<User>>?>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync(user);
-    
-        TokenCommandService
-            .Setup(x => x.AuthenticationAsync(
-                It.IsAny<LoginRequest>(), 
-                It.IsAny<Guid>(), 
-                It.IsAny<ERoles>()))
-            .ReturnsAsync(tokenResponse);
-    
-        LoginMapper
-            .Setup(x => x.DtoToLoginResponse(It.IsAny<LoginRequest>(), It.IsAny<TokenResponse>()))
-            .Returns(loginResponse);
+
+        SetupUserRepositoryFindByPredicateAsync(user);
+        SetupTokenCommandServiceAuthenticationAsync(tokenResponse);
+        SetupLoginMapperDtoToLoginResponse(loginResponse);
     
         var result = await LoginQueryService.LoginAsync(dtoLogin);
     
@@ -76,12 +62,7 @@ public class LoginQueryServiceUnitTest : LoginQueryServiceSetup
         var user = CreateValidUser();
 
         CreateNotification();
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IQueryable<User>>?>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync(user);
+        SetupUserRepositoryFindByPredicateAsync(user);
         
         var result = await LoginQueryService.LoginAsync(dtoLogin);
         
@@ -111,13 +92,9 @@ public class LoginQueryServiceUnitTest : LoginQueryServiceSetup
     public async Task LoginAsync_UserNotFound_ReturnNullAndNotification()
     {
         var dtoLogin = CreateValidLoginRequest();
+        User? user = null;
 
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IQueryable<User>>?>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync((User)null!);
+        SetupUserRepositoryFindByPredicateAsync(user!);
         
         var result = await LoginQueryService.LoginAsync(dtoLogin);
         
@@ -135,12 +112,7 @@ public class LoginQueryServiceUnitTest : LoginQueryServiceSetup
         var user = CreateValidUser();
         user.IsActive = false;
 
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IQueryable<User>>?>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync(user);
+        SetupUserRepositoryFindByPredicateAsync(user);
         
         var result = await LoginQueryService.LoginAsync(dtoLogin);
         
@@ -157,12 +129,7 @@ public class LoginQueryServiceUnitTest : LoginQueryServiceSetup
         var dtoLogin = CreateInvalidLoginRequest();
         var user = CreateValidUser();
     
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IQueryable<User>>?>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync(user);
+        SetupUserRepositoryFindByPredicateAsync(user);
         
         var result = await LoginQueryService.LoginAsync(dtoLogin);
         
@@ -179,12 +146,8 @@ public class LoginQueryServiceUnitTest : LoginQueryServiceSetup
         var dtoLogin = CreateValidLoginRequest();
         var user = CreateValidUser();
 
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                It.IsAny<Func<IQueryable<User>, IQueryable<User>>?>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync(user);
+        SetupUserRepositoryFindByPredicateAsync(user);
+        SetupTokenCommandServiceAuthenticationAsync();
 
         TokenCommandService
             .Setup(x => x.AuthenticationAsync(

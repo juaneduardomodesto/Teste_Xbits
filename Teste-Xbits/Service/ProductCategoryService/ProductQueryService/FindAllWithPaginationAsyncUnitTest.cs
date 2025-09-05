@@ -27,12 +27,14 @@ public class FindAllWithPaginationAsyncUnitTest : ProductCategoryQueryServiceSet
         
         Assert.NotNull(result);
         Assert.NotEmpty(result.Items);
-        ProductCategoryRepository.Verify(x => x.FindAllWithPaginationAsync(
+        ProductCategoryRepository.Verify(
+            x => x.FindAllWithPaginationAsync(
             It.IsAny<PageParams>(),
             It.IsAny<Expression<Func<ProductCategory, bool>>>(),
             It.IsAny<Func<IQueryable<ProductCategory>, 
                 IIncludableQueryable<ProductCategory, object>>>()), Times.Once);
-        ProductCategoryMapper.Verify(x => x.DomainToPaginationResponse(
+        ProductCategoryMapper.Verify(
+            x => x.DomainToPaginationResponse(
             It.IsAny<PageList<ProductCategory>>()), Times.Once);
     }
     
@@ -44,7 +46,7 @@ public class FindAllWithPaginationAsyncUnitTest : ProductCategoryQueryServiceSet
             [], 0, 1, 10);
         var emptyProductCategoryResponsePageList = new PageList<ProductCategoryResponse>(
             [], 0, 1, 10);
-        var pageParam = new PageParams { PageNumber = 1, PageSize = 10 };
+        var pageParam = new PageParams();
         
         SetupProductCategoryRepositoryFindAllWithPaginationAsync(emptyProductCategoryPageList);
         SetupProductCategoryMapperDomainToPaginationResponse(emptyProductCategoryResponsePageList);
@@ -54,12 +56,14 @@ public class FindAllWithPaginationAsyncUnitTest : ProductCategoryQueryServiceSet
         
         Assert.NotNull(result);
         Assert.Empty(result.Items);
-        ProductCategoryRepository.Verify(x => x.FindAllWithPaginationAsync(
+        ProductCategoryRepository.Verify(
+            x => x.FindAllWithPaginationAsync(
             It.IsAny<PageParams>(),
             It.IsAny<Expression<Func<ProductCategory, bool>>>(),
             It.IsAny<Func<IQueryable<ProductCategory>, 
                 IIncludableQueryable<ProductCategory, object>>>()), Times.Once);
-        ProductCategoryMapper.Verify(x => x.DomainToPaginationResponse(
+        ProductCategoryMapper.Verify(
+            x => x.DomainToPaginationResponse(
             It.IsAny<PageList<ProductCategory>>()), Times.Never);
     }
 }

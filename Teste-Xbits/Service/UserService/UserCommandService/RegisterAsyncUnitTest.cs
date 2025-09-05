@@ -14,21 +14,22 @@ public class RegisterAsyncUnitTest : UserCommandServiceSetup
         var dtoRegister = CreateValidUserRegisterRequest();
         var userId = Guid.NewGuid();
 
-        UserMapper.Setup(x => x.DtoRegisterToDomain(dtoRegister))
-            .Returns(user);
-        Validator.Setup(x => x.ValidationAsync(It.IsAny<User>()))
-            .ReturnsAsync(ValidationResponse);
-        UserRepository.Setup(x => x.SaveAsync(user))
-            .ReturnsAsync(true);
-        LoggerHandler.Setup(x => x.CreateLogger(It.IsAny<DomainLogger>()));
+        SetupUserMapperDtoRegisterToDomain(dtoRegister, user);
+        SetupValidatorValidationAsync();
+        SetupUserRepositorySaveAsync(user, true);
+        SetupLoggerHandlerCreateLogger();
         
         var result = await UserCommandService.RegisterUserAsync(dtoRegister, userId, false);
         
         Assert.True(result);
-        UserMapper.Verify(x => x.DtoRegisterToDomain(dtoRegister), Times.Once);
-        Validator.Verify(x => x.ValidationAsync(It.IsAny<User>()), Times.Once);
-        UserRepository.Verify(x => x.SaveAsync(It.IsAny<User>()), Times.Once);
-        LoggerHandler.Verify(x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Once);
+        UserMapper.Verify(
+            x => x.DtoRegisterToDomain(dtoRegister), Times.Once);
+        Validator.Verify(
+            x => x.ValidationAsync(It.IsAny<User>()), Times.Once);
+        UserRepository.Verify(
+            x => x.SaveAsync(It.IsAny<User>()), Times.Once);
+        LoggerHandler.Verify(
+            x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Once);
     }
     
     [Fact]
@@ -40,18 +41,20 @@ public class RegisterAsyncUnitTest : UserCommandServiceSetup
         var userId = Guid.NewGuid();
 
         CreateNotification();
-        UserMapper.Setup(x => x.DtoRegisterToDomain(dtoRegister))
-            .Returns(user);
-        Validator.Setup(x => x.ValidationAsync(It.IsAny<User>()))
-            .ReturnsAsync(ValidationResponse);
+        SetupUserMapperDtoRegisterToDomain(dtoRegister, user);
+        SetupValidatorValidationAsync();
         
         var result = await UserCommandService.RegisterUserAsync(dtoRegister, userId, false);
         
         Assert.False(result);
-        UserMapper.Verify(x => x.DtoRegisterToDomain(dtoRegister), Times.Once);
-        Validator.Verify(x => x.ValidationAsync(It.IsAny<User>()), Times.Once);
-        UserRepository.Verify(x => x.SaveAsync(It.IsAny<User>()), Times.Never);
-        LoggerHandler.Verify(x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Never);
+        UserMapper.Verify(
+            x => x.DtoRegisterToDomain(dtoRegister), Times.Once);
+        Validator.Verify(
+            x => x.ValidationAsync(It.IsAny<User>()), Times.Once);
+        UserRepository.Verify(
+            x => x.SaveAsync(It.IsAny<User>()), Times.Never);
+        LoggerHandler.Verify(
+            x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Never);
     }
     
     [Fact]
@@ -61,22 +64,22 @@ public class RegisterAsyncUnitTest : UserCommandServiceSetup
         var user = CreateValidUser();
         var dtoRegister = CreateValidUserRegisterRequest();
         var userId = Guid.NewGuid();
-
-        UserMapper.Setup(x => x.DtoRegisterToDomain(dtoRegister))
-            .Returns(user);
-        Validator.Setup(x => x.ValidationAsync(It.IsAny<User>()))
-            .ReturnsAsync(ValidationResponse);
-        UserRepository.Setup(x => x.SaveAsync(user))
-            .ReturnsAsync(false);
-        LoggerHandler.Setup(x => x.CreateLogger(It.IsAny<DomainLogger>()));
+        
+        SetupUserMapperDtoRegisterToDomain(dtoRegister, user);
+        SetupValidatorValidationAsync();
+        SetupUserRepositorySaveAsync(user, false);
+        SetupLoggerHandlerCreateLogger();
         
         var result = await UserCommandService.RegisterUserAsync(dtoRegister, userId, false);
         
         Assert.False(result);
-        UserMapper.Verify(x => x.DtoRegisterToDomain(dtoRegister), Times.Once);
-        Validator.Verify(x => x.ValidationAsync(It.IsAny<User>()), Times.Once);
-        UserRepository.Verify(x => x.SaveAsync(It.IsAny<User>()), Times.Once);
-        LoggerHandler.Verify(x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Never);
-
+        UserMapper.Verify(
+            x => x.DtoRegisterToDomain(dtoRegister), Times.Once);
+        Validator.Verify(
+            x => x.ValidationAsync(It.IsAny<User>()), Times.Once);
+        UserRepository.Verify(
+            x => x.SaveAsync(It.IsAny<User>()), Times.Once);
+        LoggerHandler.Verify(
+            x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Never);
     }
 }

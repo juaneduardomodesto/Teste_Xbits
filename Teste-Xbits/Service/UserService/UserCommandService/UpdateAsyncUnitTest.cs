@@ -12,29 +12,32 @@ public class UpdateAsyncUnitTest : UserCommandServiceSetup
     [Trait("Command", "Perfect setting")]
     public async Task UpdateAsync_ValidUser_ReturnTrue()
     {
+
         var dtoUpdate = CreateValidUserUpdateRequest();
-        var user = CreateValidUser();
-        var updatedUser = CreateValidUser();
-        var userId = Guid.NewGuid();
-
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                null, true))
-            .ReturnsAsync((user));
-        UserMapper.Setup(x => x.DtoUpdateToDomain(dtoUpdate, 1L)).Returns(updatedUser);
-        Validator.Setup(x => x.ValidationAsync(It.IsAny<User>())).ReturnsAsync(ValidationResponse);
-        UserRepository.Setup(x => x.UpdateAsync(updatedUser)).ReturnsAsync(true);
-        LoggerHandler.Setup(x => x.CreateLogger(It.IsAny<DomainLogger>()));
-
-        var userCredential = new UserCredential { Id = userId, Roles = [] };
+        var existingUser = CreateValidUser();
+        var mappedUser = CreateValidUser();
+        var userCredential = CreateUserCredential();
+        
+        SetupUserRepositoryFindByPredicateAsync(existingUser);
+        SetupUserMapperDtoUpdateToDomain(dtoUpdate, existingUser.Id, mappedUser);
+        SetupValidatorValidationAsync();
+        SetupUserRepositoryUpdateAsync(mappedUser, true);
+        SetupLoggerHandlerCreateLogger();
+        
         var result = await UserCommandService.UpdateUserAsync(dtoUpdate, userCredential);
         
         Assert.True(result);
-        UserMapper.Verify(x => x.DtoUpdateToDomain(dtoUpdate, 1L), Times.Once);
-        Validator.Verify(x => x.ValidationAsync(It.IsAny<User>()), Times.Once);
-        UserRepository.Verify(x => x.UpdateAsync(updatedUser), Times.Once);
-        LoggerHandler.Verify(x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Once);
+        UserRepository.Verify(
+            x => x.FindByPredicateAsync(
+            It.IsAny<Expression<Func<User, bool>>>(), null, true), Times.Once);
+        UserMapper.Verify(
+            x => x.DtoUpdateToDomain(dtoUpdate, existingUser.Id), Times.Once);
+        Validator.Verify(
+            x => x.ValidationAsync(mappedUser), Times.Once); 
+        UserRepository.Verify(
+            x => x.UpdateAsync(mappedUser), Times.Once);
+        LoggerHandler.Verify(
+            x => x.CreateLogger(It.IsAny<DomainLogger>()), Times.Once);
     }
 
     [Fact]
@@ -43,12 +46,9 @@ public class UpdateAsyncUnitTest : UserCommandServiceSetup
     {
         var dtoUpdate = CreateValidUserUpdateRequest();
         var userId = Guid.NewGuid();
+        User? user = null;
         
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                null, true))
-            .ReturnsAsync((User)null!);
+        SetupUserRepositoryFindByPredicateAsync(user!);
     
         var userCredential = new UserCredential { Id = userId, Roles = [] };
         var result = await UserCommandService.UpdateUserAsync(dtoUpdate, userCredential);
@@ -70,11 +70,7 @@ public class UpdateAsyncUnitTest : UserCommandServiceSetup
         var updatedUser = CreateValidUser();
         var userId = Guid.NewGuid();
         
-        UserRepository
-            .Setup(x => x.FindByPredicateAsync(
-                It.IsAny<Expression<Func<User, bool>>>(),
-                null, true))
-            .ReturnsAsync(user);
+        SetupUserRepositoryFindByPredicateAsync(user);
         
         UserMapper.Setup(x => x.DtoUpdateToDomain(dtoUpdate, user.Id))
             .Returns(updatedUser);

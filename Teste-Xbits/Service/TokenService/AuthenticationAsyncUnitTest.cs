@@ -16,21 +16,14 @@ public class AuthenticationAsyncUnitTest : TokenCommandServiceSetup
         var role = ERoles.Administrator;
         var expectedTokenResponse = CreateTokenResponse();
 
-        TokenMapper
-            .Setup(x => x.MapToTokenResponse(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int>()))
-            .Returns(expectedTokenResponse);
-
-        // Act
+        SetupTokenMapperMapToTokenResponse(expectedTokenResponse);
+        
         var result = await TokenCommandService.AuthenticationAsync(loginRequest, userGuid, role);
-
-        // Assert
+        
         Assert.NotNull(result);
         Assert.Equal(expectedTokenResponse.AccessToken, result.AccessToken);
-        
-        TokenMapper.Verify(x => x.MapToTokenResponse(
+        TokenMapper.Verify(
+            x => x.MapToTokenResponse(
             It.IsAny<string>(),
             loginRequest.Email!,
             It.IsAny<int>()), Times.Once);
@@ -45,12 +38,7 @@ public class AuthenticationAsyncUnitTest : TokenCommandServiceSetup
         var roles = new[] { ERoles.Administrator, ERoles.Employee, ERoles.Administrator };
         var expectedTokenResponse = CreateTokenResponse();
 
-        TokenMapper
-            .Setup(x => x.MapToTokenResponse(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int>()))
-            .Returns(expectedTokenResponse);
+        SetupTokenMapperMapToTokenResponse(expectedTokenResponse);
 
         foreach (var role in roles)
         {
@@ -59,8 +47,8 @@ public class AuthenticationAsyncUnitTest : TokenCommandServiceSetup
             Assert.NotNull(result);
             Assert.Equal(expectedTokenResponse.AccessToken, result.AccessToken);
         }
-
-        TokenMapper.Verify(x => x.MapToTokenResponse(
+        TokenMapper.Verify(
+            x => x.MapToTokenResponse(
             It.IsAny<string>(),
             loginRequest.Email!,
             It.IsAny<int>()), Times.Exactly(roles.Length));
@@ -73,24 +61,23 @@ public class AuthenticationAsyncUnitTest : TokenCommandServiceSetup
         var loginRequest = CreateValidLoginRequest();
         var userGuid = Guid.NewGuid();
         var role = ERoles.Administrator;
+        var expectedTokenResponse = CreateTokenResponse();
         
         Configuration.Setup(x => x["Jwt:Issuer"]).Returns("custom-issuer");
         Configuration.Setup(x => x["Jwt:Audience"]).Returns("custom-audience");
         Configuration.Setup(x => x["Jwt:DurationInMinutes"]).Returns("60");
 
-        TokenMapper
-            .Setup(x => x.MapToTokenResponse(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int>()))
-            .Returns(CreateTokenResponse());
+        SetupTokenMapperMapToTokenResponse(expectedTokenResponse);
         
         var result = await TokenCommandService.AuthenticationAsync(loginRequest, userGuid, role);
         
         Assert.NotNull(result);
-        Configuration.Verify(x => x["Jwt:Issuer"], Times.AtLeastOnce);
-        Configuration.Verify(x => x["Jwt:Audience"], Times.AtLeastOnce);
-        Configuration.Verify(x => x["Jwt:DurationInMinutes"], Times.AtLeastOnce);
+        Configuration.Verify(
+            x => x["Jwt:Issuer"], Times.AtLeastOnce);
+        Configuration.Verify(
+            x => x["Jwt:Audience"], Times.AtLeastOnce);
+        Configuration.Verify(
+            x => x["Jwt:DurationInMinutes"], Times.AtLeastOnce);
     }
 
     [Fact]
@@ -100,18 +87,15 @@ public class AuthenticationAsyncUnitTest : TokenCommandServiceSetup
         var loginRequest = CreateValidLoginRequest();
         var userGuid = Guid.NewGuid();
         var role = ERoles.Administrator;
+        var expectedTokenResponse = CreateTokenResponse();
 
-        TokenMapper
-            .Setup(x => x.MapToTokenResponse(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int>()))
-            .Returns(CreateTokenResponse());
+        SetupTokenMapperMapToTokenResponse(expectedTokenResponse);
         
         var result = await TokenCommandService.AuthenticationAsync(loginRequest, userGuid, role);
 
         Assert.NotNull(result);
-        TokenMapper.Verify(x => x.MapToTokenResponse(
+        TokenMapper.Verify(
+            x => x.MapToTokenResponse(
             It.Is<string>(token => !string.IsNullOrEmpty(token)),
             loginRequest.Email!,
             It.IsAny<int>()), Times.Once);
@@ -124,13 +108,9 @@ public class AuthenticationAsyncUnitTest : TokenCommandServiceSetup
         var loginRequest = CreateValidLoginRequest();
         var userGuid = Guid.NewGuid();
         var role = ERoles.Administrator;
+        TokenResponse? expectedTokenResponse = null;
 
-        TokenMapper
-            .Setup(x => x.MapToTokenResponse(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int>()))
-            .Returns((TokenResponse)null!);
+        SetupTokenMapperMapToTokenResponse(expectedTokenResponse!);
         
         var result = await TokenCommandService.AuthenticationAsync(loginRequest, userGuid, role);
         
