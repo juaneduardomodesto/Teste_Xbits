@@ -42,7 +42,7 @@ public class UserController(
         userCommandService.UpdateUserAsync(dtoUpdate, User.GetUserCredential());
     
     [Authorize(Policy = "AdminOnly")]
-    [HttpDelete("delete_user/{id}")]
+    [HttpDelete("delete_user/")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

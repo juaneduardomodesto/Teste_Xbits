@@ -45,7 +45,7 @@ public class ProductController(
         productCommandService.UpdateProductAsync(dtoUpdate, User.GetUserCredential());
     
     [Authorize(Policy = "AdminOnly")]
-    [HttpDelete("delete_product/{id}")]
+    [HttpDelete("delete_product/")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

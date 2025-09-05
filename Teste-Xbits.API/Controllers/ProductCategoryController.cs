@@ -41,7 +41,7 @@ public class ProductCategoryController(
         productCategoryCommandService.UpdateRegisterAsync(dtoUpdate, User.GetUserCredential());
     
     [Authorize(Policy = "AdminOnly")]
-    [HttpDelete("delete_product_category/{id}")]
+    [HttpDelete("delete_product_category/")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
