@@ -33,8 +33,6 @@ public class ProductCategoryValidation : Validate<ProductCategory>
             .NotEmpty()
             .WithMessage("O código da categoria é obrigatório.")
             .MaximumLength(20)
-            .WithMessage("O código da categoria não pode exceder 20 caracteres.")
-            .Matches("^[A-Z0-9_-]+$")
-            .WithMessage("O código da categoria deve conter apenas letras maiúsculas, números, hífens ou underscores.");
+            .WithMessage("O código da categoria não pode exceder 20 caracteres.");
     }
 }
