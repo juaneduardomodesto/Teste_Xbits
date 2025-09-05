@@ -14,8 +14,7 @@ public interface IProductCategoryRepository
         Expression<Func<ProductCategory, bool>> predicate,
         Func<IQueryable<ProductCategory>, IQueryable<ProductCategory>>? include = null,
         bool asNoTracking = false);
-    Task<PageList<ProductCategory>> FindAllWithPaginationAsync(PageParams pageParams,
+    public Task<PageList<ProductCategory>> FindAllWithPaginationAsync(PageParams pageParams, 
         Expression<Func<ProductCategory, bool>>? predicate = null, 
-        Func<IQueryable<ProductCategory>, 
-            IIncludableQueryable<ProductCategory, object>>? include = null);
+        Func<IQueryable<ProductCategory>, IQueryable<ProductCategory>>? include = null); // Mudança aqui
 }

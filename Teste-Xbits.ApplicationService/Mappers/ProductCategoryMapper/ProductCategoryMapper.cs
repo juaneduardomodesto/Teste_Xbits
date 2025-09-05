@@ -1,5 +1,6 @@
 ﻿using Teste_Xbits.ApplicationService.DataTransferObjects.Request.ProductCategoryRequest;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Response.ProductCategoryResponse;
+using Teste_Xbits.ApplicationService.DataTransferObjects.Response.ProductResponse;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 using Teste_Xbits.Domain.Entities;
 using Teste_Xbits.Domain.Handlers.PaginationHandler;
@@ -35,7 +36,20 @@ public class ProductCategoryMapper : IProductCategoryMapper
             Id = productCategory.Id,
             Name = productCategory.Name,
             Description = productCategory.Description,
-            ProductCategoryCode = productCategory.ProductCategoryCode
+            ProductCategoryCode = productCategory.ProductCategoryCode,
+            Products = productCategory.Products
+                .Select(p => new ProductResponse
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Price = p.Price,
+                    Code = p.Code,
+                    HasExpirationDate = p.HasExpirationDate,
+                    ExpirationDate = p.ExpirationDate,
+                    ProductCategoryId = p.ProductCategoryId
+                })
+                .ToList()
         };
     
     public PageList<ProductCategoryResponse> DomainToPaginationResponse(PageList<ProductCategory> userPageList)

@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using LinqKit;
+using Microsoft.EntityFrameworkCore;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Response.ProductCategoryResponse;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
 using Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
@@ -22,18 +23,22 @@ public class ProductCategoryQueryService(
 
     public async Task<ProductCategoryResponse?> FindByIdAsync(long id)
     {
-        var productCategory = await productCategoryRepository.FindByPredicateAsync(x => x.Id == id);
+        var productCategory = await productCategoryRepository.FindByPredicateAsync(
+            x => x.Id == id,
+            include: x => x.Include(pc => pc.Products));
 
         return productCategory is null
             ? null
             : productCategoryMapper.DomainToSimpleResponse(productCategory);
     }
 
-    public async Task<PageList<ProductCategoryResponse>> FindAllWithPaginationAsync(string? namePrefix, string? descriptionPrefix, string? codePrefix, PageParams pageParams)
+    public async Task<PageList<ProductCategoryResponse>> FindAllWithPaginationAsync(
+        string? namePrefix, string? descriptionPrefix, string? codePrefix, PageParams pageParams)
     {
         try
         {
-            Expression<Func<ProductCategory, bool>> predicate = PredicateBuilder.New<ProductCategory>(x => true);
+            Expression<Func<ProductCategory, bool>> 
+                predicate = PredicateBuilder.New<ProductCategory>(x => true);
 
             if (!string.IsNullOrEmpty(namePrefix))
             {
@@ -52,10 +57,11 @@ public class ProductCategoryQueryService(
                 predicate = predicate.And(e =>
                     e.ProductCategoryCode.StartsWith(codePrefix));
             }
-
+            
             var productCategoryList = await productCategoryRepository.FindAllWithPaginationAsync(
                 pageParams,
-                predicate
+                predicate,
+                include: query => query.Include(pc => pc.Products) // Adicionar o include aqui
             );
 
             return !productCategoryList.Items.Any()

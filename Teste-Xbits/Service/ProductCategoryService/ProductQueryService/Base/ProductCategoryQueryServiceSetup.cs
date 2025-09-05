@@ -84,7 +84,7 @@ public class ProductCategoryQueryServiceSetup
             .Setup(x => x.FindAllWithPaginationAsync(
                 It.IsAny<PageParams>(),
                 It.IsAny<Expression<Func<ProductCategory, bool>>>(),
-                It.IsAny<Func<IQueryable<ProductCategory>, IIncludableQueryable<ProductCategory, object>>>()))
+                It.IsAny<Func<IQueryable<ProductCategory>, IQueryable<ProductCategory>>?>()))
             .ReturnsAsync(pageList);
     }
 

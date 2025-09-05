@@ -50,8 +50,8 @@ public class ProductCategoryRepository(
     }
 
     public Task<PageList<ProductCategory>> FindAllWithPaginationAsync(PageParams pageParams, 
-        Expression<Func<ProductCategory, bool>>? predicate = null, Func<IQueryable<ProductCategory>, 
-            IIncludableQueryable<ProductCategory, object>>? include = null)
+        Expression<Func<ProductCategory, bool>>? predicate = null, 
+        Func<IQueryable<ProductCategory>, IQueryable<ProductCategory>>? include = null) // Mudança aqui
     {
         IQueryable<ProductCategory> query = DbSetContext;
         if (include is not null)

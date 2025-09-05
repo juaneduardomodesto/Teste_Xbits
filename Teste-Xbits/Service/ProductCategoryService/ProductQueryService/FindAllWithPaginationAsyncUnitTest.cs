@@ -29,10 +29,10 @@ public class FindAllWithPaginationAsyncUnitTest : ProductCategoryQueryServiceSet
         Assert.NotEmpty(result.Items);
         ProductCategoryRepository.Verify(
             x => x.FindAllWithPaginationAsync(
-            It.IsAny<PageParams>(),
-            It.IsAny<Expression<Func<ProductCategory, bool>>>(),
-            It.IsAny<Func<IQueryable<ProductCategory>, 
-                IIncludableQueryable<ProductCategory, object>>>()), Times.Once);
+                It.IsAny<PageParams>(),
+                It.IsAny<Expression<Func<ProductCategory, bool>>>(),
+                It.IsAny<Func<IQueryable<ProductCategory>, IQueryable<ProductCategory>>>()),
+            Times.Once);
         ProductCategoryMapper.Verify(
             x => x.DomainToPaginationResponse(
             It.IsAny<PageList<ProductCategory>>()), Times.Once);
@@ -58,10 +58,10 @@ public class FindAllWithPaginationAsyncUnitTest : ProductCategoryQueryServiceSet
         Assert.Empty(result.Items);
         ProductCategoryRepository.Verify(
             x => x.FindAllWithPaginationAsync(
-            It.IsAny<PageParams>(),
-            It.IsAny<Expression<Func<ProductCategory, bool>>>(),
-            It.IsAny<Func<IQueryable<ProductCategory>, 
-                IIncludableQueryable<ProductCategory, object>>>()), Times.Once);
+                It.IsAny<PageParams>(),
+                It.IsAny<Expression<Func<ProductCategory, bool>>>(),
+                It.IsAny<Func<IQueryable<ProductCategory>, IQueryable<ProductCategory>>>()),
+            Times.Once);
         ProductCategoryMapper.Verify(
             x => x.DomainToPaginationResponse(
             It.IsAny<PageList<ProductCategory>>()), Times.Never);
