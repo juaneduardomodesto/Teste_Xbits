@@ -7,7 +7,7 @@ public class ProductResponse
     public string? Description { get; init; }
     public decimal Price { get; init; }
     public required string Code { get; init; }
-    public bool HasValidadeDate { get; init; }
+    public bool HasExpirationDate { get; init; }
     public DateTime? ExpirationDate { get; init; }
     public long? ProductCategoryId { get; init; }
     public ProductCategoryResponse.ProductCategoryResponse? ProductCategory { get; init; }

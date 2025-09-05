@@ -49,7 +49,7 @@ public class ProductMapper(IProductCategoryMapper categoryMapper) : IProductMapp
             Description = product.Description,
             Price = product.Price,
             Code = product.Code,
-            HasValidadeDate = product.HasExpirationDate,
+            HasExpirationDate = product.HasExpirationDate,
             ExpirationDate = product.ExpirationDate,
             ProductCategoryId = product.ProductCategoryId,
             ProductCategory = product.ProductCategory == null 
