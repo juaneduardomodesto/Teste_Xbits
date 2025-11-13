@@ -55,12 +55,16 @@ public class ProductMapping : MappingBase, IEntityTypeConfiguration<Product>
         builder.Property(x => x.ProductCategoryId)
             .HasColumnType("bigint")
             .HasColumnName("product_category_id")
-            .IsRequired(false);
+            .IsRequired(true);
         
         builder.HasOne(p => p.ProductCategory)
             .WithMany(pc => pc.Products)
             .HasForeignKey(p => p.ProductCategoryId)
-            .IsRequired(false)
+            .IsRequired(true)
             .OnDelete(DeleteBehavior.SetNull);
+        
+        builder.HasIndex(x => x.Name)
+            .IsUnique()
+            .HasDatabaseName("IX_Product_Name_Unique");
     }
 }

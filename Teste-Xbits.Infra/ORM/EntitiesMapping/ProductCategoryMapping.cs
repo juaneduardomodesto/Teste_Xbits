@@ -41,5 +41,9 @@ public sealed class ProductCategoryMapping : MappingBase, IEntityTypeConfigurati
             .WithOne(p => p.ProductCategory)
             .HasForeignKey(p => p.ProductCategoryId)
             .OnDelete(DeleteBehavior.SetNull);
+        
+        builder.HasIndex(x => x.Name)
+            .IsUnique()
+            .HasDatabaseName("IX_Product_Name_Unique");
     }
 }
