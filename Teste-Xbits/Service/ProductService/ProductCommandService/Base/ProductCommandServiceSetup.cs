@@ -85,7 +85,7 @@ public class ProductCommandServiceSetup
             Code = "12345",
             ExpirationDate = DateTime.Today.AddDays(1),
             HasExpirationDate = true,
-            ProductCategoryId = null
+            ProductCategoryId = 1
         };
     
     protected ProductRegisterRequest CreateInvalidProductCreateRequest() => 
@@ -97,7 +97,7 @@ public class ProductCommandServiceSetup
             Code = "12345",
             ExpirationDate = DateTime.Today.AddDays(1),
             HasExpirationDate = true,
-            ProductCategoryId = null
+            ProductCategoryId = 1
         };
 
     protected ProductUpdateRequest CreateValidProductUpdateRequest()
@@ -111,7 +111,7 @@ public class ProductCommandServiceSetup
             Code = "12345",
             ExpirationDate = DateTime.Today.AddDays(1),
             HasExpirationDate = true,
-            ProductCategoryId = null
+            ProductCategoryId = 1
         };
     }
     
@@ -126,7 +126,7 @@ public class ProductCommandServiceSetup
             Code = "",
             ExpirationDate = DateTime.Today.AddDays(1),
             HasExpirationDate = false,
-            ProductCategoryId = null
+            ProductCategoryId = 1
         };
     }
 

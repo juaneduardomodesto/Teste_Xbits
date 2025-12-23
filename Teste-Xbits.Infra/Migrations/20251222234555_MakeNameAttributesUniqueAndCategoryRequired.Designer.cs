@@ -12,8 +12,8 @@ using Teste_Xbits.Infra.ORM.Context;
 namespace Teste_Xbits.Infra.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20251110034858_EnforceUniqueNames")]
-    partial class EnforceUniqueNames
+    [Migration("20251222234555_MakeNameAttributesUniqueAndCategoryRequired")]
+    partial class MakeNameAttributesUniqueAndCategoryRequired
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,7 +139,7 @@ namespace Teste_Xbits.Infra.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("nvarchar(200)")
                         .HasColumnName("name");
 
                     b.Property<string>("ProductCategoryCode")
@@ -154,7 +154,7 @@ namespace Teste_Xbits.Infra.Migrations
 
                     b.HasIndex("Name")
                         .IsUnique()
-                        .HasDatabaseName("IX_Product_Name_Unique");
+                        .HasDatabaseName("IX_ProductCategory_Name_Unique");
 
                     b.HasIndex("ProductCategoryCode")
                         .IsUnique()
@@ -223,7 +223,7 @@ namespace Teste_Xbits.Infra.Migrations
                     b.HasOne("Teste_Xbits.Domain.Entities.ProductCategory", "ProductCategory")
                         .WithMany("Products")
                         .HasForeignKey("ProductCategoryId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ProductCategory");

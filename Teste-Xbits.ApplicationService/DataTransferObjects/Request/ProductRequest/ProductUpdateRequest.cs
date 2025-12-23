@@ -2,5 +2,5 @@
 
 public class ProductUpdateRequest : ProductRegisterRequest
 {
-    public long? ProductId { get; init; }
+    public long ProductId { get; init; }
 }

@@ -61,7 +61,7 @@ public class ProductMapping : MappingBase, IEntityTypeConfiguration<Product>
             .WithMany(pc => pc.Products)
             .HasForeignKey(p => p.ProductCategoryId)
             .IsRequired(true)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasIndex(x => x.Name)
             .IsUnique()

@@ -11,6 +11,6 @@ public record Product : BaseEntity
     public required string Code { get; init; }
     public bool HasExpirationDate { get; init; }
     public DateTime? ExpirationDate { get; init; }
-    public long? ProductCategoryId { get; init; }
+    public long ProductCategoryId { get; init; }
     public virtual ProductCategory? ProductCategory { get; init; }
 }

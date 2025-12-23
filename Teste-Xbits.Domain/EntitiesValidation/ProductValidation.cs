@@ -39,10 +39,10 @@ public class ProductValidation : Validate<Product>
             .Must((product, expirationDate) => ValidateExpirationDate(product, expirationDate))
             .WithMessage("Data de validade é obrigatória quando o produto tem data de validade.");
 
-        RuleFor(x => x.ProductCategoryId)
-            .GreaterThan(0)
-            .When(x => x.ProductCategoryId.HasValue)
-            .WithMessage("O ID da categoria de produto deve ser maior que zero.");
+        // RuleFor(x => x.ProductCategoryId)
+        //     .GreaterThan(0)
+        //     .When(x => x.ProductCategoryId.HasValue)
+        //     .WithMessage("O ID da categoria de produto deve ser maior que zero.");
     }
 
     private bool ValidateExpirationDate(Product product, DateTime? expirationDate)

@@ -264,7 +264,7 @@ public class ProductValidationUniTest
             Description = "Valid description",
             Price = 100.50m,
             Code = "PROD001",
-            ProductCategoryId = null
+            ProductCategoryId = 1
         };
         
         var result = _validator.TestValidate(validProduct);

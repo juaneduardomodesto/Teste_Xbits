@@ -19,7 +19,7 @@ public sealed class ProductCategoryMapping : MappingBase, IEntityTypeConfigurati
             .ValueGeneratedOnAdd();
         
         builder.Property(u => u.Name)
-            .HasColumnType("nvarchar(max)")
+            .HasColumnType("nvarchar(200)")
             .HasColumnName("name")
             .IsRequired(true);
         
@@ -44,6 +44,6 @@ public sealed class ProductCategoryMapping : MappingBase, IEntityTypeConfigurati
         
         builder.HasIndex(x => x.Name)
             .IsUnique()
-            .HasDatabaseName("IX_Product_Name_Unique");
+            .HasDatabaseName("IX_ProductCategory_Name_Unique");
     }
 }

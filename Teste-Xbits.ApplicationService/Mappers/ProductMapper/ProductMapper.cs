@@ -19,9 +19,7 @@ public class ProductMapper(IProductCategoryMapper categoryMapper) : IProductMapp
             UpdatedAt = DateTime.UtcNow,
             HasExpirationDate = dtoRegister.HasExpirationDate,
             ExpirationDate = dtoRegister.ExpirationDate,
-            ProductCategoryId = dtoRegister.ProductCategoryId == 0 
-                ? null 
-                : dtoRegister.ProductCategoryId,
+            ProductCategoryId = dtoRegister.ProductCategoryId
         };
 
     public Product DtoUpdateToDomain(ProductUpdateRequest dtoUpdate, long productCategoryId) =>
@@ -36,9 +34,7 @@ public class ProductMapper(IProductCategoryMapper categoryMapper) : IProductMapp
             UpdatedAt = DateTime.UtcNow,
             HasExpirationDate = dtoUpdate.HasExpirationDate,
             ExpirationDate = dtoUpdate.ExpirationDate,
-            ProductCategoryId = dtoUpdate.ProductId == 0 
-                ? null 
-                : dtoUpdate.ProductCategoryId,
+            ProductCategoryId = dtoUpdate.ProductId
         };
 
     public ProductResponse DomainToSimpleResponse(Product product) =>

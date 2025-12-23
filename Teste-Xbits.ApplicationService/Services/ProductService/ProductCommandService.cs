@@ -78,7 +78,7 @@ public class ProductCommandService(
         if (dtoRegister.ProductCategoryId is > 0)
         {
             var productCategory = await productCategoryRepository.FindByPredicateAsync(
-                x => x.Id == dtoRegister.ProductCategoryId.Value);
+                x => x.Id == dtoRegister.ProductCategoryId);
     
             if (productCategory == null)
             {
@@ -167,7 +167,7 @@ public class ProductCommandService(
     if (dtoUpdate.ProductCategoryId is > 0)
     {
         var productCategory = await productCategoryRepository.FindByPredicateAsync(
-            x => x.Id == dtoUpdate.ProductCategoryId.Value);
+            x => x.Id == dtoUpdate.ProductCategoryId);
 
         if (productCategory == null)
         {
