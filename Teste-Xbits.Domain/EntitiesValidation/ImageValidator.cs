@@ -36,7 +36,6 @@ public class ImageValidation : Validate<ImageFiles>
 
     private bool BeValidContentType(string contentType)
     {
-        var validTypes = new[] { "image/jpeg", "image/png", "image/webp", "image/jpg" };
-        return validTypes.Contains(contentType.ToLower());
+        return EImageContentTypeExtensions.IsValidContentType(contentType);
     }
 }

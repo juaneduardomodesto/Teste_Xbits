@@ -39,8 +39,7 @@ public class ImageCommandService(
             return null;
         }
 
-        var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp", "image/jpg" };
-        if (!allowedTypes.Contains(request.File.ContentType.ToLower()))
+        if (!EImageContentTypeExtensions.IsValidContentType(request.File.ContentType))
         {
             _notificationHandler.CreateNotification(
                 ImageTracer.Save,
