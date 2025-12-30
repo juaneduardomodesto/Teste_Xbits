@@ -61,7 +61,7 @@ public class ProductCategoryQueryService(
             var productCategoryList = await productCategoryRepository.FindAllWithPaginationAsync(
                 pageParams,
                 predicate,
-                include: query => query.Include(pc => pc.Products) // Adicionar o include aqui
+                include: query => query.Include(pc => pc.Products)
             );
 
             return !productCategoryList.Items.Any()

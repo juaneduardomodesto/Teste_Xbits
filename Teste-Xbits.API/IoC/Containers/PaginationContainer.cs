@@ -12,6 +12,7 @@ public static class PaginationContainer
         services.AddScoped<IPaginationQueryService<User>, PaginationQueryService<User>>();
         services.AddScoped<IPaginationQueryService<ProductCategory>, PaginationQueryService<ProductCategory>>();
         services.AddScoped<IPaginationQueryService<Product>, PaginationQueryService<Product>>();
+        services.AddScoped<IPaginationQueryService<ImageFiles>, PaginationQueryService<ImageFiles>>();
         return services;
     }
 }
