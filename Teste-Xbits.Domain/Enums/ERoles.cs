@@ -2,6 +2,9 @@
 
 namespace Teste_Xbits.Domain.Enums;
 
+/// <summary>
+/// User role enumeration
+/// </summary>
 public enum ERoles : uint
 {
     [Description("Administrador")]

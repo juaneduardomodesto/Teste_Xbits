@@ -11,6 +11,7 @@ public static class RepositoryContainer
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IImageRepository, ImageRepository>();
         return services;
     }
 }
