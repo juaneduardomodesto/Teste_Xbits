@@ -14,6 +14,10 @@ public static class ValidationContainer
         services.AddScoped<IValidate<ProductCategory>, ProductCategoryValidation>();
         services.AddScoped<IValidate<Product>, ProductValidation>();
         services.AddScoped<IValidate<ImageFiles>, ImageValidation>();
+        services.AddScoped<IValidate<CartItem>, CartItemValidation>();
+        services.AddScoped<IValidate<Cart>, CartValidation>();
+        services.AddScoped<IValidate<OrderItem>, OrderItemValidation>();
+        services.AddScoped<IValidate<Order>, OrderValidation>();
         return services;
     }
 }

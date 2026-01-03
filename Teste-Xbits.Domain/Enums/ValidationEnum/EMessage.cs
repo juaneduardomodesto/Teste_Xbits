@@ -47,5 +47,41 @@ public enum EMessage : ushort
     ProductNotFound,
     
     [Description("Categoria não encontrada.")]
-    CategoryNotFound
+    CategoryNotFound,
+    
+    [Description("{0} não pertence ao usuário.")]
+    NotOwnedByUser,
+
+    [Description("{0} indisponível.")]
+    Unavailable,
+
+    [Description("{0} esgotado.")]
+    OutOfStock,
+
+    [Description("Quantidade máxima de {0} excedida.")]
+    MaxQuantityExceeded,
+
+    [Description("{0} inválido para a operação atual.")]
+    InvalidForOperation,
+
+    [Description("Operação não permitida em {0}.")]
+    OperationNotAllowed,
+
+    [Description("Limite de {0} atingido.")]
+    LimitReached,
+
+    [Description("{0} já adicionado ao carrinho.")]
+    AlreadyAdded,
+
+    [Description("Carrinho vazio.")]
+    EmptyCart,
+
+    [Description("Valor mínimo de {0} não atingido.")]
+    MinimumValueNotReached,
+
+    [Description("Erro ao processar {0}.")]
+    ProcessingError,
+
+    [Description("{0} expirado.")]
+    Expired,
 }

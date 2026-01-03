@@ -1,6 +1,8 @@
 ﻿using Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
+using Teste_Xbits.ApplicationService.Services.CartService;
 using Teste_Xbits.ApplicationService.Services.ImageService;
 using Teste_Xbits.ApplicationService.Services.LoginService;
+using Teste_Xbits.ApplicationService.Services.OrderService;
 using Teste_Xbits.ApplicationService.Services.ProductCategoryService;
 using Teste_Xbits.ApplicationService.Services.ProductService;
 using Teste_Xbits.ApplicationService.Services.Storage;
@@ -28,6 +30,10 @@ public static class ServiceContainer
         services.AddScoped<IImageQueryService, ImageQueryService>();
         services.AddScoped<IImageStorageService, LocalImageStorageService>();
         services.AddScoped<IImageResizerService, ImageResizer>();
+        services.AddScoped<ICartCommandService, CartCommandService>();
+        services.AddScoped<ICartQueryService, CartQueryService>();
+        services.AddScoped<IOrderCommandService, OrderCommandService>();
+        services.AddScoped<IOrderQueryService, OrderQueryService>();
         return services;
     }
 }

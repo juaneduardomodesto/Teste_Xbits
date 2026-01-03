@@ -1,7 +1,8 @@
 ﻿using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
-using Teste_Xbits.ApplicationService.Mappers;
+using Teste_Xbits.ApplicationService.Mappers.CartMapper;
 using Teste_Xbits.ApplicationService.Mappers.ImageMapper;
 using Teste_Xbits.ApplicationService.Mappers.LoginMapper;
+using Teste_Xbits.ApplicationService.Mappers.OrderMapper;
 using Teste_Xbits.ApplicationService.Mappers.ProductCategoryMapper;
 using Teste_Xbits.ApplicationService.Mappers.ProductMapper;
 using Teste_Xbits.ApplicationService.Mappers.TokenMapper;
@@ -19,6 +20,8 @@ public static class MapperContainer
         services.AddScoped<IProductCategoryMapper, ProductCategoryMapper>();
         services.AddScoped<IProductMapper, ProductMapper>();
         services.AddScoped<IImageMapper, ImageMapper>();
+        services.AddScoped<ICartMapper, CartMapper>();
+        services.AddScoped<IOrderMapper, OrderMapper>();
         return services;
     }
 }
