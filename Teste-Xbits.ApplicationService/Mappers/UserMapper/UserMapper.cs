@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Text.RegularExpressions;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Request.UserRegister;
 using Teste_Xbits.ApplicationService.DataTransferObjects.Response.UserResponse;
 using Teste_Xbits.ApplicationService.Interfaces.MapperContracts;
@@ -11,13 +12,14 @@ namespace Teste_Xbits.ApplicationService.Mappers.UserMapper;
 public class UserMapper(IConfiguration configuration) : IUserMapper
 {
     private readonly string? _applicationSalt = configuration["Security:PasswordSalt"];
+    private static readonly Regex _cpfRegex = new Regex(@"[^\d]", RegexOptions.Compiled);
 
     public User DtoRegisterToDomain(UserRegisterRequest dtoRegister) =>
         new()
         {
             Name = dtoRegister.Name,
             Email = dtoRegister.Email,
-            Cpf = dtoRegister.Cpf,
+            Cpf = CleanCpf(dtoRegister.Cpf), // Usando o método de limpeza
             PasswordHash = dtoRegister.Password.ConvertMd5(_applicationSalt!),
             AcceptPrivacyPolicy = dtoRegister.AcceptPrivacyPolicy,
             AcceptTermsOfUse = dtoRegister.AcceptTermsOfUse,
@@ -33,7 +35,7 @@ public class UserMapper(IConfiguration configuration) : IUserMapper
             Id = userId,
             Name = dtoUpdate.Name,
             Email = dtoUpdate.Email,
-            Cpf = dtoUpdate.Cpf,
+            Cpf = CleanCpf(dtoUpdate.Cpf), // Usando o método de limpeza
             PasswordHash = dtoUpdate.Password.ConvertMd5(_applicationSalt!),
             AcceptPrivacyPolicy = dtoUpdate.AcceptPrivacyPolicy,
             AcceptTermsOfUse = dtoUpdate.AcceptTermsOfUse,
@@ -50,7 +52,7 @@ public class UserMapper(IConfiguration configuration) : IUserMapper
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
-            Cpf = user.Cpf,
+            Cpf = FormatCpf(user.Cpf),
             AcceptPrivacyPolicy = user.AcceptPrivacyPolicy,
             AcceptTermsOfUse = user.AcceptTermsOfUse,
             IsActive = user.IsActive,
@@ -67,5 +69,23 @@ public class UserMapper(IConfiguration configuration) : IUserMapper
             userPageList.TotalCount,
             userPageList.CurrentPage,
             userPageList.PageSize);
+    }
+
+    /// <summary>
+    /// Formats CPF for display
+    /// </summary>
+    private static string CleanCpf(string cpf)
+    {
+        return string.IsNullOrWhiteSpace(cpf) ? cpf : _cpfRegex.Replace(cpf, "");
+    }
+
+    /// <summary>
+    /// Formats CPF for display
+    /// </summary>
+    private static string FormatCpf(string cpf)
+    {
+        if (string.IsNullOrWhiteSpace(cpf) || cpf.Length != 11)
+            return cpf;
+        return $"{cpf.Substring(0, 3)}.{cpf.Substring(3, 3)}.{cpf.Substring(6, 3)}-{cpf.Substring(9, 2)}";
     }
 }
