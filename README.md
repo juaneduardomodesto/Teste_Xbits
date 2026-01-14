@@ -1,3 +1,9 @@
+#Purchase System Backend
+
+The system features a complete backend with core business logic, ready for integration with a frontend application. 
+The repository structure and code are organized to demonstrate clean architecture, scalability, and integration readiness. 
+All backend functionalities are implemented and documented for further development.
+
 # Passo a passo do desafio (fluxo do candidato)
 
 * **Faça um fork** deste repositório.
@@ -59,3 +65,4 @@
 ## Observações finais
 * Deixamos uma **breve estrutura/padrão de pastas** sugestiva do que pode ser feito.
   Fique à vontade para **surpreender** — inclusive iniciando **do zero**, se preferir.
+
