@@ -35,7 +35,7 @@ public class AuthenticationAsyncUnitTest : TokenCommandServiceSetup
     {
         var loginRequest = CreateValidLoginRequest();
         var userGuid = Guid.NewGuid();
-        var roles = new[] { ERoles.Administrator, ERoles.Employee, ERoles.Administrator };
+        var roles = new[] { ERoles.Administrator, ERoles.Client, ERoles.Administrator };
         var expectedTokenResponse = CreateTokenResponse();
 
         SetupTokenMapperMapToTokenResponse(expectedTokenResponse);

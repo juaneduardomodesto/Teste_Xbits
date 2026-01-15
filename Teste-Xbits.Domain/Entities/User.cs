@@ -20,5 +20,5 @@ public record User : BaseEntity
     
     public bool IsActive { get; set; } = true;
     
-    public ERoles Role { get; init; } = ERoles.Employee;
+    public ERoles Role { get; init; } = ERoles.Client;
 }

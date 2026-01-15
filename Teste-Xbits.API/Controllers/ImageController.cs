@@ -26,7 +26,7 @@ public class ImageController(
     /// <remarks>
     /// This endpoint allows authenticated employees or admins to upload an image file.
     /// The image will be associated with a specific entity (e.g., product, user, etc.).
-    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpPost("upload_image")]
@@ -47,7 +47,7 @@ public class ImageController(
     /// <remarks>
     /// This endpoint allows authenticated employees or admins to delete an existing image.
     /// The operation will remove the image file from storage and its record from the database.
-    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpDelete("delete_image")]
@@ -68,7 +68,7 @@ public class ImageController(
     /// <remarks>
     /// This endpoint allows setting a specific image as the primary/default image
     /// for an entity. Only one image can be the main image per entity.
-    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpPut("set_main_image")]
@@ -89,7 +89,7 @@ public class ImageController(
     /// <remarks>
     /// This endpoint returns detailed information about a specific image,
     /// including metadata, file information, and entity association.
-    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("get_by_id/{id}")]
@@ -111,7 +111,7 @@ public class ImageController(
     /// <remarks>
     /// This endpoint returns all images that belong to a specific entity.
     /// The images are typically ordered by their display order.
-    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("get_by_id/{entityType}/{entityId}")]
@@ -134,7 +134,7 @@ public class ImageController(
     /// <remarks>
     /// This endpoint returns the primary/default image for an entity.
     /// If no main image is explicitly set, it might return the first image or null.
-    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("get_main_image/{entityType}/{entityId}/main")]
@@ -158,7 +158,7 @@ public class ImageController(
     /// This endpoint allows uploading multiple image files at once.
     /// The first image can optionally be set as the main image for the entity.
     /// Each image can have its own alternative text (alt tag).
-    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpPost("upload-multiple")]
@@ -198,7 +198,7 @@ public class ImageController(
     /// <remarks>
     /// This endpoint allows reordering images for an entity.
     /// The order determines how images are displayed in galleries or carousels.
-    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpPut("update-order")]
@@ -218,7 +218,7 @@ public class ImageController(
     /// <remarks>
     /// This endpoint allows updating the accessibility description (alt text) of an image.
     /// Alt text is important for screen readers and SEO.
-    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpPut("update-alt")]
@@ -264,7 +264,7 @@ public class ImageController(
     /// This endpoint provides direct download access to image files.
     /// It's useful for systems that don't serve static files through a web server.
     /// The response includes appropriate content type and file name headers.
-    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("download/{id}")]

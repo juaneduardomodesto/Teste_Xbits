@@ -14,10 +14,27 @@ public sealed class DbInitializer
 
     public async Task Seeding()
     {
+        // Seed Users
         if (!await _applicationContext.Users.AnyAsync())
         {
-            var userSeed = UserSeed.CreateSeed();
-            await _applicationContext.Users.AddAsync(userSeed);
+            var userSeeds = UserSeed.CreateSeeds();
+            await _applicationContext.Users.AddRangeAsync(userSeeds);
+            await _applicationContext.SaveChangesAsync();
+        }
+
+        // Seed Product Categories
+        if (!await _applicationContext.ProductCategories.AnyAsync())
+        {
+            var categoriesSeeds = ProductCategorySeed.CreateSeeds();
+            await _applicationContext.ProductCategories.AddRangeAsync(categoriesSeeds);
+            await _applicationContext.SaveChangesAsync();
+        }
+
+        // Seed Products
+        if (!await _applicationContext.Products.AnyAsync())
+        {
+            var productsSeeds = ProductSeed.CreateSeeds();
+            await _applicationContext.Products.AddRangeAsync(productsSeeds);
             await _applicationContext.SaveChangesAsync();
         }
     }

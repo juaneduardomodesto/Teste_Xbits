@@ -11,5 +11,5 @@ public enum ERoles : uint
     Administrator = 1,
     
     [Description("Empregado")]
-    Employee = 2,
+    Client = 2,
 }
