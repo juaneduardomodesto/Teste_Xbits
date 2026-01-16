@@ -34,7 +34,7 @@ public static class UserSeed
                 AcceptTermsOfUse = true,
                 PasswordHash = "cliente123".ConvertMd5(Salt),
                 IsActive = true,
-                Role = ERoles.Client,
+                Role = ERoles.Employee,
                 CreatedAt = DateTime.Today,
                 UpdatedAt = DateTime.Today,
             }

@@ -9,7 +9,8 @@ public enum ERoles : uint
 {
     [Description("Administrador")]
     Administrator = 1,
-    
-    [Description("Empregado")]
-    Client = 2,
+    [Description("Funcionário")]
+    Employee = 2,
+    [Description("Cliente")]
+    Customer = 3,
 }

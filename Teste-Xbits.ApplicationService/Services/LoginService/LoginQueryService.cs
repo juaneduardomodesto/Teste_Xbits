@@ -83,7 +83,7 @@ public class LoginQueryService(
             return null;
         }
         
-        var loginResponse = loginMapper.DtoToLoginResponse(dtoLogin, token);
+        var loginResponse = loginMapper.DtoToLoginResponse(dtoLogin, token, user);
         return loginResponse;
     }
 }

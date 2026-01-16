@@ -10,7 +10,6 @@ public static class ProductCategorySeed
         {
             new ProductCategory
             {
-                Id = 1,
                 Name = "Eletrônicos",
                 Description = "Produtos eletrônicos e tecnologia",
                 ProductCategoryCode = "ELET001",
@@ -19,7 +18,6 @@ public static class ProductCategorySeed
             },
             new ProductCategory
             {
-                Id = 2,
                 Name = "Alimentos",
                 Description = "Produtos alimentícios e bebidas",
                 ProductCategoryCode = "ALIM001",
@@ -28,7 +26,6 @@ public static class ProductCategorySeed
             },
             new ProductCategory
             {
-                Id = 3,
                 Name = "Vestuário",
                 Description = "Roupas e acessórios",
                 ProductCategoryCode = "VEST001",

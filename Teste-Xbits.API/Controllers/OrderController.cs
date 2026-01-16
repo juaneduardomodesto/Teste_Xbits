@@ -32,7 +32,7 @@ public class OrderController(
     /// - Mark cart as checked out
     /// - Update inventory levels
     /// The cart will be converted to a permanent order that cannot be modified.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpPost("checkout")]
@@ -57,7 +57,7 @@ public class OrderController(
     /// - Generate payment confirmation
     /// - Send payment confirmation notifications
     /// This operation is typically triggered after checkout or for manual payment processing.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpPost("process-payment")]
@@ -85,7 +85,7 @@ public class OrderController(
     /// - Restore inventory levels
     /// - Send cancellation notifications
     /// Cancellation may not be possible for orders that have already been shipped or processed.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpPut("cancel/{orderId}")]
@@ -113,7 +113,7 @@ public class OrderController(
     /// - Payment and shipping information
     /// - User and cart references
     /// The authenticated user must have access rights to view the order.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("get_order_by_id/{id}")]
@@ -138,7 +138,7 @@ public class OrderController(
     /// - Status history
     /// Order numbers are typically human-readable identifiers used for customer reference.
     /// The authenticated user must have access rights to view the order.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("get_order_by_number/{orderNumber}")]
@@ -162,7 +162,7 @@ public class OrderController(
     /// - Pagination metadata (total count, page info)
     /// Orders can be filtered by date range, status, or other criteria through query parameters.
     /// This is useful for order history pages and account management.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("my-orders")]

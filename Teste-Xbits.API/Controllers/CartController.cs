@@ -24,7 +24,7 @@ public class CartController(
     /// This endpoint returns the current active shopping cart for the authenticated user.
     /// The cart includes all items, quantities, prices, and total calculations.
     /// If no active cart exists for the user, the system may return null or create a new empty cart.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpGet("list_cart_items_by_user")]
@@ -48,7 +48,7 @@ public class CartController(
     /// - Create or update cart item
     /// - Calculate pricing and totals
     /// If the product already exists in the cart, the quantity may be incremented based on business rules.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpPost("add_product_to_cart")]
@@ -73,7 +73,7 @@ public class CartController(
     /// - Update pricing calculations
     /// - Recalculate cart totals
     /// Setting quantity to 0 will typically remove the item from the cart.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpPut("update_product_from_user_cart")]
@@ -98,7 +98,7 @@ public class CartController(
     /// - Recalculate cart totals
     /// - Update inventory availability if applicable
     /// This operation is irreversible within the same session.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpDelete("remove_product_from_user_cart")]
@@ -123,7 +123,7 @@ public class CartController(
     /// - Maintain the cart record for future use
     /// This operation is typically used for cart abandonment or starting fresh.
     /// Use with caution as this operation cannot be undone.
-    /// Requires <see cref="ERoles.Client"/> or <see cref="ERoles.Administrator"/> role.
+    /// Requires <see cref="ERoles.Employee"/> or <see cref="ERoles.Administrator"/> role.
     /// </remarks>
     [Authorize(Policy = "EmployeeOrAdmin")]
     [HttpDelete("clear_user_cart")]
