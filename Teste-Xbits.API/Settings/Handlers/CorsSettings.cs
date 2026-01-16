@@ -12,6 +12,7 @@ public static class CorsSettings
             {
                 builder.WithMethods()
                     .AllowAnyHeader()
+                    .AllowAnyMethod()
                     .SetIsOriginAllowed(_ => true)
                     .AllowCredentials();
             });
