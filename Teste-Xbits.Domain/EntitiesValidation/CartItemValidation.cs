@@ -49,21 +49,5 @@ public class CartItemValidation : Validate<CartItem>
                 .FormatTo(FieldUnitPrice, "maior que zero"))
             .LessThanOrEqualTo(9999999.99m).WithMessage(EMessage.InvalidValue.GetDescription()
                 .FormatTo(MsgUnitPriceTooHigh));
-
-        RuleFor(x => x.CreatedAt)
-            .NotEmpty().WithMessage(EMessage.Required.GetDescription()
-                .FormatTo(FieldCreationDate))
-            .LessThanOrEqualTo(DateTime.UtcNow).WithMessage(EMessage.InvalidValue.GetDescription()
-                .FormatTo(MsgFutureCreationDate));
-
-        RuleFor(x => x.UpdatedAt)
-            .NotEmpty().WithMessage(EMessage.Required.GetDescription()
-                .FormatTo(FieldUpdateDate))
-            .GreaterThanOrEqualTo(x => x.CreatedAt)
-                .When(x => x.CreatedAt != default && x.UpdatedAt != default)
-                .WithMessage(EMessage.InvalidValue.GetDescription()
-                    .FormatTo(MsgUpdateBeforeCreation))
-            .LessThanOrEqualTo(DateTime.UtcNow).WithMessage(EMessage.InvalidValue.GetDescription()
-                .FormatTo(MsgFutureUpdateDate));
     }
 }

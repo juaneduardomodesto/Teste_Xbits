@@ -47,17 +47,5 @@ public class OrderItemValidation : Validate<OrderItem>
         RuleFor(x => x.UnitPrice)
             .GreaterThan(0).WithMessage(EMessage.MoreExpected.GetDescription()
                 .FormatTo(FieldUnitPrice, "maior que zero"));
-
-        RuleFor(x => x.CreatedAt)
-            .LessThanOrEqualTo(DateTime.UtcNow).WithMessage(EMessage.InvalidValue.GetDescription()
-                .FormatTo($"{FieldCreationDate} {MsgFutureDate}"));
-
-        RuleFor(x => x.UpdatedAt)
-            .GreaterThanOrEqualTo(x => x.CreatedAt)
-            .When(x => x.CreatedAt != default && x.UpdatedAt != default)
-            .WithMessage(EMessage.InvalidValue.GetDescription()
-                .FormatTo(MsgUpdateBeforeCreation))
-            .LessThanOrEqualTo(DateTime.UtcNow).WithMessage(EMessage.InvalidValue.GetDescription()
-                .FormatTo($"{FieldUpdateDate} {MsgFutureDate}"));
     }
 }

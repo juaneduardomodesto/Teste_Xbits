@@ -110,18 +110,5 @@ public sealed class OrderValidation : Validate<Order>
             .WithMessage(EMessage.Required.GetDescription()
                 .FormatTo(MsgCancellationReasonRequired))
             .When(order => order.Status == EOrderStatus.Cancelled);
-
-        RuleFor(order => order.CreatedAt)
-            .LessThanOrEqualTo(DateTime.UtcNow)
-            .WithMessage(EMessage.InvalidValue.GetDescription()
-                .FormatTo($"{FieldCreationDate} {MsgFutureDate}"));
-
-        RuleFor(order => order.UpdatedAt)
-            .GreaterThanOrEqualTo(order => order.CreatedAt)
-            .WithMessage(EMessage.InvalidValue.GetDescription()
-                .FormatTo(MsgUpdateBeforeCreation))
-            .LessThanOrEqualTo(DateTime.UtcNow)
-            .WithMessage(EMessage.InvalidValue.GetDescription()
-                .FormatTo($"{FieldUpdateDate} {MsgFutureDate}"));
     }
 }

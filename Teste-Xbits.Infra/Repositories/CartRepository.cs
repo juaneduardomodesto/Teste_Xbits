@@ -113,7 +113,7 @@ public sealed class CartRepository(ApplicationContext dbContext)
 
     public Task<CartItem?> GetCartItemAsync(long cartItemId)
     {
-        return _dbContext.Set<CartItem>()
+        return _dbContext.Set<CartItem>().AsNoTracking()
             .FirstOrDefaultAsync(ci => ci.Id == cartItemId);
     }
 

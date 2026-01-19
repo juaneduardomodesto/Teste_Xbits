@@ -123,7 +123,7 @@ public class CartCommandService(
         }
         
         var cart = await cartRepository.FindByPredicateAsync(
-            x => x.Id == cartItem.CartId && x.UserId == userCredential.Id);
+            x => x.Id == cartItem.CartId && x.UserId == userCredential.Id, asNoTracking: true);
         
         if (cart == null)
         {
@@ -139,9 +139,7 @@ public class CartCommandService(
 
         var result = await cartRepository.UpdateCartItemAsync(updatedItem);
         if (result)
-        {
             GenerateLogger(CartTracer.UpdateItem, userCredential.Id, cartItem.Id.ToString());
-        }
 
         return result;
     }
