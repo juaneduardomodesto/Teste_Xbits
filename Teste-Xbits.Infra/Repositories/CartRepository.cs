@@ -76,6 +76,7 @@ public sealed class CartRepository(ApplicationContext dbContext)
     public Task<Cart?> GetActiveCartWithItemsAsync(Guid userId)
     {
         return DbSetContext
+            .AsNoTracking() 
             .Include(c => c.Items)
                 .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(c => c.UserId == userId && c.Status == ECartStatus.Active);
