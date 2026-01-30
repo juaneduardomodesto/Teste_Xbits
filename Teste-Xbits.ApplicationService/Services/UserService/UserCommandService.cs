@@ -20,7 +20,7 @@ public class UserCommandService(
 {
     private readonly INotificationHandler _notificationHandler = notification;
 
-    public async Task<bool> RegisterUserAsync(UserRegisterRequest dtoRegister, Guid userId, bool firstUser)
+    public async Task<bool> RegisterUserAsync(UserRegisterRequest dtoRegister, long userId, bool firstUser)
     {
         #region Validations
         
@@ -80,9 +80,8 @@ public class UserCommandService(
         
         var result = await userRepository.SaveAsync(mappedUser);
         if (result && !firstUser)
-        {
             GenerateLogger(UserTracer.Save, userId, mappedUser.Id.ToString());
-        }
+        
         return result;
     }
 

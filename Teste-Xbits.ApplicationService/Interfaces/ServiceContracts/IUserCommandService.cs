@@ -5,7 +5,7 @@ namespace Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
 
 public interface IUserCommandService
 {
-    Task<bool> RegisterUserAsync(UserRegisterRequest dtoRegister, Guid userId, bool firstUser);
+    Task<bool> RegisterUserAsync(UserRegisterRequest dtoRegister, long userId, bool firstUser);
     Task<bool> UpdateUserAsync(UserUpdateRequest dtoUpdate, UserCredential  userCredential);
     Task<bool> DeleteUserAsync(UserDeleteRequest dtoDelete, UserCredential  userCredential);
 }

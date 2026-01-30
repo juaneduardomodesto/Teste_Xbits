@@ -7,7 +7,7 @@ public record Order : BaseEntity
 {
     public long Id { get; init; }
     public required string OrderNumber { get; init; }
-    public required Guid UserId { get; init; }
+    public required long UserId { get; init; }
     public required long CartId { get; init; }
     public required EOrderStatus Status { get; init; }
     public required EPaymentMethod PaymentMethod { get; init; }

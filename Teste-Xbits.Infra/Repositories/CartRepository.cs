@@ -49,7 +49,7 @@ public sealed class CartRepository(ApplicationContext dbContext)
         return query.OrderByDescending(x => x.CreatedAt).FirstOrDefaultAsync(predicate);
     }
 
-    public async Task<Cart> GetOrCreateActiveCartAsync(Guid userId)
+    public async Task<Cart> GetOrCreateActiveCartAsync(long userId)
     {
         var cart = await DbSetContext
             .Include(c => c.Items)
@@ -73,10 +73,10 @@ public sealed class CartRepository(ApplicationContext dbContext)
         return newCart;
     }
 
-    public Task<Cart?> GetActiveCartWithItemsAsync(Guid userId)
+    public Task<Cart?> GetActiveCartWithItemsAsync(long userId)
     {
         return DbSetContext
-            .AsNoTracking() 
+
             .Include(c => c.Items)
                 .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(c => c.UserId == userId && c.Status == ECartStatus.Active);

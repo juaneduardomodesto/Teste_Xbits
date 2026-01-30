@@ -2,6 +2,6 @@
 
 public record UserCredential
 {
-    public Guid Id { get; init; }
+    public long Id { get; init; }
     public required List<string> Roles { get; set; }
 }

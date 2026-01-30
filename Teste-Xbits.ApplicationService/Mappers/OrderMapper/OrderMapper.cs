@@ -40,7 +40,7 @@ public class OrderMapper : IOrderMapper
             orderPageList.PageSize);
     }
 
-    public Order CreateOrderFromCart(Cart cart, CheckoutRequest request, Guid userId)
+    public Order CreateOrderFromCart(Cart cart, CheckoutRequest request, long userId)
     {
         var subtotal = cart.Subtotal;
         var total = subtotal - request.Discount + request.ShippingCost;

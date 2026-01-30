@@ -12,7 +12,7 @@ public abstract class ServiceBaseFacade(
 
     protected void GenerateLogger(
         string eventDescription,
-        Guid userId,
+        long userId,
         string? entityId = null)
     {
         var logger1 = new DomainLogger

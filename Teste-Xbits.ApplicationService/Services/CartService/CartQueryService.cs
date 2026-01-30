@@ -15,7 +15,7 @@ public class CartQueryService(
     ICartMapper cartMapper)
     : ServiceBase<Cart>(notification, validate, logger), ICartQueryService
 {
-    public async Task<CartResponse?> GetActiveCartAsync(Guid userId)
+    public async Task<CartResponse?> GetActiveCartAsync(long userId)
     {
         var cart = await cartRepository.GetActiveCartWithItemsAsync(userId);
         return cart != null ? cartMapper.DomainToResponse(cart) : null;

@@ -13,8 +13,8 @@ public interface ICartRepository
         Expression<Func<Cart, bool>> predicate,
         Func<IQueryable<Cart>, IIncludableQueryable<Cart, object>>? include = null,
         bool asNoTracking = false);
-    Task<Cart> GetOrCreateActiveCartAsync(Guid userId);
-    Task<Cart?> GetActiveCartWithItemsAsync(Guid userId);
+    Task<Cart> GetOrCreateActiveCartAsync(long userId);
+    Task<Cart?> GetActiveCartWithItemsAsync(long userId);
     Task<Cart?> GetCartWithItemsAsync(long cartId);
     Task<bool> AddCartItemAsync(CartItem cartItem);
     Task<bool> UpdateCartItemAsync(CartItem cartItem);

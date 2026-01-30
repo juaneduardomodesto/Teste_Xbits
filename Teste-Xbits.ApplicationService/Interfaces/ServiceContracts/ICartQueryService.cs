@@ -4,6 +4,6 @@ namespace Teste_Xbits.ApplicationService.Interfaces.ServiceContracts;
 
 public interface ICartQueryService
 {
-    Task<CartResponse?> GetActiveCartAsync(Guid userId);
+    Task<CartResponse?> GetActiveCartAsync(long userId);
     Task<CartResponse?> GetCartByIdAsync(long cartId);
 }

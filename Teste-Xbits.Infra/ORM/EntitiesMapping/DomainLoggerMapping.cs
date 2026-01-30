@@ -31,7 +31,7 @@ public sealed class DomainLoggerMapping : MappingBase, IEntityTypeConfiguration<
             .IsRequired();
 
         builder.Property(l => l.UserId)
-            .HasColumnType("uniqueidentifier")
+            .HasColumnType("bigint")
             .HasColumnName("user_id")
             .HasColumnOrder(4)
             .IsRequired();
@@ -41,5 +41,10 @@ public sealed class DomainLoggerMapping : MappingBase, IEntityTypeConfiguration<
             .HasColumnName("entity_id")
             .HasColumnOrder(5)
             .IsRequired(false);
+        
+        builder.HasOne<Domain.Entities.User>()
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

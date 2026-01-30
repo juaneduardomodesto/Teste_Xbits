@@ -46,9 +46,9 @@ public sealed class OrderValidation : Validate<Order>
                 .FormatTo(MsgOrderNumberTooLong));
 
         RuleFor(order => order.UserId)
-            .NotEqual(Guid.Empty)
+            .GreaterThan(0)
             .WithMessage(EMessage.Required.GetDescription()
-                .FormatTo(FieldUserId));
+                .FormatTo($"{FieldUserId} deve ser maior que zero"));
 
         RuleFor(order => order.CartId)
             .GreaterThan(0)

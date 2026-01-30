@@ -7,5 +7,5 @@ public interface IOrderQueryService
 {
     Task<OrderResponse?> GetOrderByIdAsync(long orderId);
     Task<OrderResponse?> GetOrderByNumberAsync(string orderNumber);
-    Task<PageList<OrderResponse>> GetUserOrdersAsync(Guid userId, PageParams pageParams);
+    Task<PageList<OrderResponse>> GetUserOrdersAsync(long userId, PageParams pageParams);
 }

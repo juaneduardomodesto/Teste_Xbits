@@ -15,7 +15,7 @@ public class OrderMapping : MappingBase, IEntityTypeConfiguration<Order>
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
         builder.Property(x => x.OrderNumber).IsRequired().HasMaxLength(50);
-        builder.Property(x => x.UserId).IsRequired();
+        builder.Property(x => x.UserId).IsRequired().HasColumnType("bigint"); // Adicionado .HasColumnType("bigint")
         builder.Property(x => x.CartId).IsRequired();
         builder.Property(x => x.Status).IsRequired();
         builder.Property(x => x.PaymentMethod).IsRequired();
@@ -30,8 +30,11 @@ public class OrderMapping : MappingBase, IEntityTypeConfiguration<Order>
         builder.Property(x => x.CreatedAt).IsRequired();
         builder.Property(x => x.UpdatedAt).IsRequired();
 
-        // Ignorar a propriedade de navegação User (não é necessária)
-        builder.Ignore(x => x.User);
+        // Relacionamento com User
+        builder.HasOne<Domain.Entities.User>()
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasOne(x => x.Cart)
             .WithMany()

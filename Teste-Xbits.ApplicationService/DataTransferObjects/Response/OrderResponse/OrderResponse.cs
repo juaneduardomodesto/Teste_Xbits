@@ -6,7 +6,7 @@ public record OrderResponse
 {
     public long Id { get; init; }
     public string OrderNumber { get; init; } = string.Empty;
-    public Guid UserId { get; init; }
+    public long UserId { get; init; }
     public EOrderStatus Status { get; init; }
     public EPaymentMethod PaymentMethod { get; init; }
     public EPaymentStatus PaymentStatus { get; init; }

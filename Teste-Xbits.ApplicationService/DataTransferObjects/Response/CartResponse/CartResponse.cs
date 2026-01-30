@@ -5,7 +5,7 @@ namespace Teste_Xbits.ApplicationService.DataTransferObjects.Response.CartRespon
 public record CartResponse
 {
     public long Id { get; init; }
-    public Guid UserId { get; init; }
+    public long UserId { get; init; }
     public ECartStatus Status { get; init; }
     public decimal Subtotal { get; init; }
     public int TotalItems { get; init; }

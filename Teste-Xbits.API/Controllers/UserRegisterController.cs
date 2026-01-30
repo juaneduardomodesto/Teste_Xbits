@@ -18,5 +18,5 @@ public class UserRegisterController(IUserCommandFacadeService userCommandFacadeS
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(IEnumerable<DomainNotification>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<bool> RegisterUser([FromBody] UserRegisterRequest dtoRegister) =>
-        userCommandFacadeService.RegisterUserAsync(dtoRegister, Guid.Empty, true);
+        userCommandFacadeService.RegisterUserAsync(dtoRegister, 0, true);
 }

@@ -75,7 +75,7 @@ public abstract class ServiceBase<T>(
 
     protected void GenerateLogger(
         string eventDescription,
-        Guid userId,
+        long userId,
         string? entityId = null)
     {
         var logger1 = new DomainLogger

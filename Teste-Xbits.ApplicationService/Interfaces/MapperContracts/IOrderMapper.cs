@@ -10,7 +10,7 @@ public interface IOrderMapper
 {
     OrderResponse DomainToResponse(Order order);
     PageList<OrderResponse> DomainToPaginationResponse(PageList<Order> orderPageList);
-    Order CreateOrderFromCart(Cart cart, CheckoutRequest request, Guid userId);
+    Order CreateOrderFromCart(Cart cart, CheckoutRequest request, long userId);
     OrderItem CreateOrderItemFromCartItem(long orderId, CartItem cartItem);
     Cart MarkCartAsCheckedOut(Cart cart);
     Order MarkOrderAsPaid(Order order);

@@ -12,15 +12,48 @@ public class OrderItemMapping : MappingBase, IEntityTypeConfiguration<OrderItem>
         builder.ToTable(nameof(OrderItem), Schema);
 
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        
+        builder.Property(x => x.Id)
+            .HasColumnType("bigint")
+            .HasColumnName("order_item_id")
+            .ValueGeneratedOnAdd();
 
-        builder.Property(x => x.OrderId).IsRequired();
-        builder.Property(x => x.ProductId).IsRequired();
-        builder.Property(x => x.ProductName).IsRequired().HasMaxLength(255);
-        builder.Property(x => x.Quantity).IsRequired();
-        builder.Property(x => x.UnitPrice).HasPrecision(18, 2).IsRequired();
-        builder.Property(x => x.CreatedAt).IsRequired();
-        builder.Property(x => x.UpdatedAt).IsRequired();
+        builder.Property(x => x.OrderId)
+            .HasColumnType("bigint")
+            .HasColumnName("order_id")
+            .IsRequired();
+
+        builder.Property(x => x.ProductId)
+            .HasColumnType("bigint")
+            .HasColumnName("product_id")
+            .IsRequired();
+
+        builder.Property(x => x.ProductName)
+            .HasColumnType("nvarchar(255)")
+            .HasColumnName("product_name")
+            .HasMaxLength(255)
+            .IsRequired();
+
+        builder.Property(x => x.Quantity)
+            .HasColumnType("int")
+            .HasColumnName("quantity")
+            .IsRequired();
+
+        builder.Property(x => x.UnitPrice)
+            .HasColumnType("decimal(18,2)")
+            .HasColumnName("unit_price")
+            .HasPrecision(18, 2)
+            .IsRequired();
+
+        builder.Property(x => x.CreatedAt)
+            .HasColumnType("datetime2")
+            .HasColumnName("created_at")
+            .IsRequired();
+
+        builder.Property(x => x.UpdatedAt)
+            .HasColumnType("datetime2")
+            .HasColumnName("updated_at")
+            .IsRequired();
 
         // Ignorar propriedade calculada
         builder.Ignore(x => x.TotalPrice);
@@ -35,6 +68,11 @@ public class OrderItemMapping : MappingBase, IEntityTypeConfiguration<OrderItem>
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(x => x.OrderId);
+        builder.HasIndex(x => x.OrderId)
+            .HasDatabaseName("IX_OrderItem_OrderId");
+
+        // Índice composto para consultas frequentes
+        builder.HasIndex(x => new { x.OrderId, x.ProductId })
+            .HasDatabaseName("IX_OrderItem_OrderId_ProductId");
     }
 }

@@ -12,20 +12,47 @@ public class CartMapping : MappingBase, IEntityTypeConfiguration<Cart>
         builder.ToTable(nameof(Cart), Schema);
         
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Property(x => x.Id)
+            .HasColumnType("bigint")
+            .HasColumnName("cart_id")
+            .ValueGeneratedOnAdd();
 
-        builder.Property(x => x.UserId).IsRequired();
-        builder.Property(x => x.Status).IsRequired();
-        builder.Property(x => x.CheckedOutAt);
-        builder.Property(x => x.CreatedAt).IsRequired();
-        builder.Property(x => x.UpdatedAt).IsRequired();
-
-        // Ignorar a propriedade de navegação User (não é necessária)
-        builder.Ignore(x => x.User);
+        builder.Property(x => x.UserId)
+            .HasColumnType("bigint")
+            .HasColumnName("user_id")
+            .IsRequired();
+        
+        builder.Property(x => x.Status)
+            .HasColumnType("int")
+            .HasColumnName("status")
+            .IsRequired()
+            .HasConversion<int>();
+            
+        builder.Property(x => x.CheckedOutAt)
+            .HasColumnType("datetime2")
+            .HasColumnName("checked_out_at")
+            .IsRequired(false);
+            
+        builder.Property(x => x.CreatedAt)
+            .HasColumnType("datetime2")
+            .HasColumnName("created_at")
+            .IsRequired();
+            
+        builder.Property(x => x.UpdatedAt)
+            .HasColumnType("datetime2")
+            .HasColumnName("updated_at")
+            .IsRequired();
+        
         // Ignorar propriedades calculadas
         builder.Ignore(x => x.Subtotal);
         builder.Ignore(x => x.TotalItems);
 
-        builder.HasIndex(x => new { x.UserId, x.Status });
+        builder.HasIndex(x => new { x.UserId, x.Status })
+            .HasDatabaseName("IX_Cart_UserId_Status");
+        
+        builder.HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

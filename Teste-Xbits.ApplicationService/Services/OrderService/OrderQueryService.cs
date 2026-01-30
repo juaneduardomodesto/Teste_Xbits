@@ -28,19 +28,19 @@ public class OrderQueryService(
     {
         var order = await orderRepository.FindByPredicateAsync(
             x => x.OrderNumber == orderNumber,
-            include: q => q.Include(o => o.Items).ThenInclude(i => i.Product));
+            include: q => q.Include(o => o.Items).ThenInclude(i => i.Product)!);
         
         return order != null ? orderMapper.DomainToResponse(order) : null;
     }
 
-    public async Task<PageList<OrderResponse>> GetUserOrdersAsync(Guid userId, PageParams pageParams)
+    public async Task<PageList<OrderResponse>> GetUserOrdersAsync(long userId, PageParams pageParams)
     {
         Expression<Func<Order, bool>> predicate = x => x.UserId == userId;
         
         var orders = await orderRepository.FindAllWithPaginationAsync(
             pageParams,
             predicate,
-            include: q => q.Include(o => o.Items).ThenInclude(i => i.Product));
+            include: q => q.Include(o => o.Items).ThenInclude(i => i.Product)!);
 
         return orderMapper.DomainToPaginationResponse(orders);
     }
